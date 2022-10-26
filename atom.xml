@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title>Hexo</title>
-  <icon>https://shiyi--11.gitee.io/blog-page/icon.png</icon>
+  <icon>https://shiyi-ale.github.io/icon.png</icon>
   
-  <link href="https://shiyi--11.gitee.io/blog-page/atom.xml" rel="self"/>
+  <link href="https://shiyi-ale.github.io/atom.xml" rel="self"/>
   
-  <link href="https://shiyi--11.gitee.io/blog-page/"/>
-  <updated>2022-10-26T16:08:13.864Z</updated>
-  <id>https://shiyi--11.gitee.io/blog-page/</id>
+  <link href="https://shiyi-ale.github.io/"/>
+  <updated>2022-10-26T17:32:57.684Z</updated>
+  <id>https://shiyi-ale.github.io/</id>
   
   <author>
     <name>John Doe</name>
@@ -17,9 +17,22 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>HEXO</title>
+    <link href="https://shiyi-ale.github.io/2022/10/27/HEXO/"/>
+    <id>https://shiyi-ale.github.io/2022/10/27/HEXO/</id>
+    <published>2022-10-26T17:32:57.000Z</published>
+    <updated>2022-10-26T17:32:57.684Z</updated>
+    
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
     <title>My New Post</title>
-    <link href="https://shiyi--11.gitee.io/blog-page/2022/10/27/My-New-Post/"/>
-    <id>https://shiyi--11.gitee.io/blog-page/2022/10/27/My-New-Post/</id>
+    <link href="https://shiyi-ale.github.io/2022/10/27/My-New-Post/"/>
+    <id>https://shiyi-ale.github.io/2022/10/27/My-New-Post/</id>
     <published>2022-10-26T16:08:13.000Z</published>
     <updated>2022-10-26T16:08:13.864Z</updated>
     
@@ -31,8 +44,8 @@
   
   <entry>
     <title>Hello World</title>
-    <link href="https://shiyi--11.gitee.io/blog-page/2022/10/26/hello-world/"/>
-    <id>https://shiyi--11.gitee.io/blog-page/2022/10/26/hello-world/</id>
+    <link href="https://shiyi-ale.github.io/2022/10/26/hello-world/"/>
+    <id>https://shiyi-ale.github.io/2022/10/26/hello-world/</id>
     <published>2022-10-26T15:24:03.384Z</published>
     <updated>2022-10-26T15:24:03.384Z</updated>
     
