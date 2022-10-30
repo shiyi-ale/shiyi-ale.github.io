@@ -4,26 +4,19 @@
   
     
     <entry>
-      <title>Blog</title>
-      <link href="/2022/10/27/Blog/"/>
-      <url>/2022/10/27/Blog/</url>
+      <title>Samsung 16g双通道内存组建安全下车</title>
+      <link href="/2022/10/30/Samsung-16g%E5%8F%8C%E9%80%9A%E9%81%93%E5%86%85%E5%AD%98%E7%BB%84%E5%BB%BA%E5%AE%89%E5%85%A8%E4%B8%8B%E8%BD%A6/"/>
+      <url>/2022/10/30/Samsung-16g%E5%8F%8C%E9%80%9A%E9%81%93%E5%86%85%E5%AD%98%E7%BB%84%E5%BB%BA%E5%AE%89%E5%85%A8%E4%B8%8B%E8%BD%A6/</url>
       
-        <content type="html"><![CDATA[]]></content>
-      
-      
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>HEXO</title>
-      <link href="/2022/10/27/HEXO/"/>
-      <url>/2022/10/27/HEXO/</url>
-      
-        <content type="html"><![CDATA[]]></content>
+        <content type="html"><![CDATA[<h1 id="关于最近组了一个双通道16g3200MHZ的DRAM"><a href="#关于最近组了一个双通道16g3200MHZ的DRAM" class="headerlink" title="关于最近组了一个双通道16g3200MHZ的DRAM"></a>关于最近组了一个双通道16g3200MHZ的DRAM</h1><blockquote><p>PDD下单，1天就送到了，采用机型Dell 5511 </p><p>花费不是很大可以说很香300RMB左右一条，600RMB拿下</p><p>原来那两条2BG海力士是凑合了</p></blockquote><h2 id="拆装教程"><a href="#拆装教程" class="headerlink" title="拆装教程"></a>拆装教程</h2><p><a href="https://www.bilibili.com/video/BV13h411m79S?share_source=copy_web">https://www.bilibili.com/video/BV13h411m79S?share_source=copy_web</a></p><h3 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h3><p>记得在拆机前放放手上的静电,洗个手或者摸摸大铁门</p><p><img src="https://raw.githubusercontent.com/shiyi-ale/Image/main/Blog/image-20221030170821916.png" alt="image-20221030170821916"></p><p>双面8颗粒三星相对来说对于3060laptop的释放要好很多</p><p><img src="https://raw.githubusercontent.com/shiyi-ale/Image/main/Blog/image-20221030170843528.png" alt="image-20221030170843528"></p><p>下面是一些测试</p><p><img src="https://raw.githubusercontent.com/shiyi-ale/Image/main/Blog/image-20221030165931675.png" alt="image-20221030165931675"></p><h3 id="三星内存条不乏有手艺人的存在，从外观辨别可以看这个视频"><a href="#三星内存条不乏有手艺人的存在，从外观辨别可以看这个视频" class="headerlink" title="三星内存条不乏有手艺人的存在，从外观辨别可以看这个视频"></a>三星内存条不乏有手艺人的存在，从外观辨别可以看这个视频</h3><p><a href="https://www.bilibili.com/video/BV1SY4y1p7TL?share_source=copy_web">https://www.bilibili.com/video/BV1SY4y1p7TL?share_source=copy_web</a></p>]]></content>
       
       
+      
+        <tags>
+            
+            <tag> DRAM </tag>
+            
+        </tags>
       
     </entry>
     
