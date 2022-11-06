@@ -4,11 +4,11 @@
   
     
     <entry>
-      <title>Something</title>
-      <link href="/2022/10/30/Something/"/>
-      <url>/2022/10/30/Something/</url>
+      <title>「数学之美」Dandelin spheres 更好的理解椭圆</title>
+      <link href="/2022/11/06/Dandelin-spheres/"/>
+      <url>/2022/11/06/Dandelin-spheres/</url>
       
-        <content type="html"><![CDATA[]]></content>
+        <content type="html"><![CDATA[<h1 id="Dandelin-spheres"><a href="#Dandelin-spheres" class="headerlink" title="Dandelin spheres"></a>Dandelin spheres</h1><blockquote><p>对于椭圆，并不陌生</p><p>我大概简单梳理了一下大概有三种定义</p><ol><li>从圆对与xy轴的变换</li><li>一条绳子通过两个图钉进行绘画</li><li>圆锥的切面</li></ol></blockquote><p>这三个定义之间有什么样的联系我们需要去思考</p><h2 id="所以为什么圆锥的切面就会是椭圆呢？"><a href="#所以为什么圆锥的切面就会是椭圆呢？" class="headerlink" title="所以为什么圆锥的切面就会是椭圆呢？"></a>所以为什么圆锥的切面就会是椭圆呢？</h2><p>在这里我们引入：丹德林球体</p><p>主要条件无不是创建一个相切的条件</p><p><a href="https://en.wikipedia.org/wiki/File:Dandelin_spheres.svg"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Dandelin_spheres.svg/330px-Dandelin_spheres.svg.png" alt="img"></a></p><h3 id="解决本题的关键是什么呢？"><a href="#解决本题的关键是什么呢？" class="headerlink" title="解决本题的关键是什么呢？"></a>解决本题的关键是什么呢？</h3><p>主要是根据椭圆的其他定义，连线相加是一个固定值。</p><p><strong>所以我们的关键是：「于变化中寻找不变量」</strong></p><h3 id="何谓不变量？"><a href="#何谓不变量？" class="headerlink" title="何谓不变量？"></a>何谓不变量？</h3><p><img src="/../../../Library/Application%2520Support/typora-user-images/image-20221106202146068.png" alt="image-20221106202146068"></p><h3 id="所以我们需要寻找一种方法将椭圆的“图钉连线”转换到圆锥的侧面上。"><a href="#所以我们需要寻找一种方法将椭圆的“图钉连线”转换到圆锥的侧面上。" class="headerlink" title="所以我们需要寻找一种方法将椭圆的“图钉连线”转换到圆锥的侧面上。"></a>所以我们需要寻找一种方法将椭圆的“图钉连线”转换到圆锥的侧面上。</h3><p>这时候相切条件就非常重要了</p><p>![image-20221106203150231](data:image&#x2F;svg+xml,%3Csvg xmlns&#x3D;”<a href="http://www.w3.org/2000/svg&quot;">http://www.w3.org/2000/svg&quot;</a> viewBox&#x3D;”0 0 1964 1462”%3E%3C&#x2F;svg%3E)</p><h4 id="严谨的解释如下："><a href="#严谨的解释如下：" class="headerlink" title="严谨的解释如下："></a>严谨的解释如下：</h4><p>设 S 为此圆锥的顶点，平面 <em>e</em> 与此圆锥交于曲线 <em>C</em>（蓝色区域）。 以下则证明 <em>C</em> 是椭圆。</p><p>放置两个棕色的丹德林球<em>G</em>1 和 <em>G</em>2，皆与平面和圆锥相交，上面的为<em>G</em>1，下面的为<em>G</em>2。 而两个球体与锥体相切的点形成圆形（白色的部分），分别记为k1<img src="https://wikimedia.org/api/rest_v1/media/math/render/svg/376315fd4983f01dada5ec2f7bebc48455b14a66" alt="k_1"> and k2<img src="https://wikimedia.org/api/rest_v1/media/math/render/svg/c51b4ba57ee596d8435fc4ed76703ca3a2fc444a" alt="k_2">。</p><p>将 <em>G</em>1 与此平面的切点记为 <em>F</em>1 ；类似地，用于<em>G</em>2 与<em>F</em>2。<em>P</em> 为曲线 <em>C</em> 上一点 。</p><p><em>需要证明</em>：当 <em>P</em> 沿着截面曲线 <em>C</em> 移动时，d(P,F1)+d(P,F2)<img src="https://wikimedia.org/api/rest_v1/media/math/render/svg/869483ae983223f529788926114e3a2e1abd1d91" alt="{\displaystyle d(P,F_{1})+d(P,F_{2})}"> 仍是定值（椭圆的定义之一)。</p><ul><li>将 <em>P</em> 与圆锥顶点 <em>S</em> 作一直线，与 <em>G</em>1 和 <em>G</em>2 分别交于 <em>P</em>1 和 <em>P</em>2 。</li><li>将 <em>P</em> 移动时，<em>P</em>1 和 <em>P</em>2 则沿着两个圆移动，且其距离 d(P1,P2)<img src="https://wikimedia.org/api/rest_v1/media/math/render/svg/b1267d12335f31da84a1e6d2b89a416d9133ab1f" alt="{\displaystyle d(P_{1},P_{2})}"> 是定值。</li><li><em>P</em> 和 <em>F</em>1 的距离会等同于 <em>P</em> 到 <em>P</em>1 的距离，因为线段 | <em>PF</em>1 and <em>PP</em>1 都[[</li></ul><p>相切]]于<em>G</em>1。</p><ul><li>基于对称性，<em>P</em> 到 <em>F</em>2 的距离，等于 <em>P</em> 到 <em>P</em>2 的距离，因为线段 | <em>PF</em>2 和 <em>PP</em>2 都<a href="https://zh.wikipedia.org/wiki/%E7%9B%B8%E5%88%87">相切</a>于<em>G</em>2</li><li>于是，我们计算出其距离和 d(P,F1)+d(P,F2) &#x3D; d(P,P1)+d(P,P2) &#x3D; d(P1,P2)<img src="https://wikimedia.org/api/rest_v1/media/math/render/svg/8fd3c37c2670efa0dc775185ff56a72b53ad6e45" alt="{\displaystyle d(P,F_{1})+d(P,F_{2})\ =\ d(P,P_{1})+d(P,P_{2})\ =\ d(P_{1},P_{2})}"> 是定值。</li></ul>]]></content>
       
       
       
@@ -17,7 +17,7 @@
     
     
     <entry>
-      <title>Samsung 16g双通道内存组建安全下车</title>
+      <title>「电子产品」Samsung 16g双通道内存组建安全下车</title>
       <link href="/2022/10/30/Samsung-16g%E5%8F%8C%E9%80%9A%E9%81%93%E5%86%85%E5%AD%98%E7%BB%84%E5%BB%BA%E5%AE%89%E5%85%A8%E4%B8%8B%E8%BD%A6/"/>
       <url>/2022/10/30/Samsung-16g%E5%8F%8C%E9%80%9A%E9%81%93%E5%86%85%E5%AD%98%E7%BB%84%E5%BB%BA%E5%AE%89%E5%85%A8%E4%B8%8B%E8%BD%A6/</url>
       
