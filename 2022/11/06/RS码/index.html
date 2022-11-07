@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="EN">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="travel" />
+  <meta name="author" content="Knot" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      「密码学」二维码与RS码 
+      
+      
+    
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Montserrat|Roboto:400,400italic,600|Roboto+Mono" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/iconfont/iconfont.css">
+
+
+  
+
+  
+    
+<link rel="stylesheet" href="/css/post.css">
+
+  
+
+  <!-- jquery3.3.1 -->
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+
+  <!-- fancybox -->
+  <link href="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.css" rel="stylesheet">
+  <script async src="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.js"></script>
+  
+<script src="/js/fancybox.js"></script>
+
+
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Knot" type="application/atom+xml">
+</head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <a href="/">KNOT</a>
+</div>
+
+
+      <p class="links">
+  
+    <a title="archives" target="" href="/archives/">
+      <i class="iconfont icon-bookmark"></i>
+    </a>
+  
+    <a title="github" target="_blank" href="">
+      <i class="iconfont icon-github"></i>
+    </a>
+  
+    <a title="rss" target="_blank" href="/atom.xml">
+      <i class="iconfont icon-rss"></i>
+    </a>
+  
+</p>
+
+
+      <div class="main">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+<!-- LaTex Display -->
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+</script>
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    }
+  };
+</script>
+
+<div class="post">
+  <h3 class="date">
+    Nov 06, 2022
+  </h3>
+  <h1>
+    「密码学」二维码与RS码
+  </h1>
+  <div class="content markdown-body">
+    <h2 id="译-为程序员写的Reed-Solomon码解释-Felix021-So-far-so-good"><a href="#译-为程序员写的Reed-Solomon码解释-Felix021-So-far-so-good" class="headerlink" title="[译] 为程序员写的Reed-Solomon码解释 - Felix021 - So far so good"></a>[<a target="_blank" rel="noopener" href="https://www.felix021.com/blog/read.php?2116">译] 为程序员写的Reed-Solomon码解释 - Felix021 - So far so good</a></h2><blockquote>
+<p>一点阅读过程中有点感触就想写点</p>
+</blockquote>
+<h2 id="RS码的历史"><a href="#RS码的历史" class="headerlink" title="RS码的历史"></a>RS码的历史</h2><p><img src="https://raw.githubusercontent.com/shiyi-ale/Image/main/Blog/image-20221030222511963.png" alt="image-20221030222511963"></p>
+<h2 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h2><p>看RS码主要是再github上那个zxing生成二维码的项目</p>
+<p>看源码的时候遇到了较大的困难，主要来自数学层面，于是到互联网上搜集资料找到了这一篇</p>
+<h2 id="从程序员的视角"><a href="#从程序员的视角" class="headerlink" title="从程序员的视角"></a>从程序员的视角</h2><h4 id="QR码结构"><a href="#QR码结构" class="headerlink" title="QR码结构"></a>QR码结构</h4><p>在角落的3个方形定位器模式是QR码的典型可见特征</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/3071283-cae1182d137db6d6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/368/format/webp" alt="img"></p>
+<h3 id="掩码"><a href="#掩码" class="headerlink" title="掩码"></a>掩码</h3><p>掩码处理：逆转某些模块（白色变成黑色，黑色变成白色），保留其他模块不变。</p>
+<p>目的：为了避免数据区域中出现诸如类似定位器模式的形状，或者是大片的空白区域等，可能会使扫描器混淆、错乱。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/3071283-d1927f454c1996b1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/696/format/webp" alt="img"></p>
+<p>红色区域使用一个固定的掩码模式编码保存了数据区域（黑白部分）的掩码格式信息。</p>
+<blockquote>
+<p>其实可以理解成，掩码就是一个有固定格式的点阵图，点阵图上的标记可以让黑白进行转换</p>
+</blockquote>
+<h4 id="掩码使用什么操作"><a href="#掩码使用什么操作" class="headerlink" title="掩码使用什么操作"></a>掩码使用什么操作</h4><p>使用异或运算（XOR，eXclusive-or，通常在变成语言中用 ^ 来表示）</p>
+<h4 id="具体是怎么样的"><a href="#具体是怎么样的" class="headerlink" title="具体是怎么样的"></a>具体是怎么样的</h4><ol>
+<li><p>逆时针读取左上角的定位器模式</p>
+</li>
+<li><p>得到下面的比特序列，白色表示0，黑色表示1</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Input   101101101001011</span><br><span class="line">Mask  ^ 101010000010010</span><br><span class="line">Output  000111101011001</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h5 id="格式信息"><a href="#格式信息" class="headerlink" title="格式信息"></a>格式信息</h5><blockquote>
+<p>格式信息有另一份可辨别的副本，因此即使其中一份被毁坏，也仍然有机会被识别</p>
+</blockquote>
+<p>副本被分成两个部分，分别放在另外两个定位器的边上，同样也是逆时针方向阅读（沿着左下角定位器往上，然后是右上角定位器边缘从左往右）。</p>
+<p><img src="https://raw.githubusercontent.com/shiyi-ale/Image/main/Blog/image-20221027210323174.png" alt="image-20221027210323174"></p>
+<h4 id="格式信息的前2-bits-给出了用于数据的纠错级别。"><a href="#格式信息的前2-bits-给出了用于数据的纠错级别。" class="headerlink" title="格式信息的前2 bits 给出了用于数据的纠错级别。"></a>格式信息的前2 <em>bits</em> 给出了用于数据的纠错级别。</h4><p>这个尺寸的QR码包含26字节(<em>bytes</em>,1 <em>byte</em> &#x3D; 8 <em>bits</em> )信息，其中一些用于保存原数据，一些用于保存校验码，如下表所示。左边第一列只是给纠错级别起了个简单的名字。</p>
+<table>
+<thead>
+<tr>
+<th align="center">纠错级别</th>
+<th align="center">级别指示器</th>
+<th align="center">纠错码字节数</th>
+<th align="center">原数据字节数</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">L</td>
+<td align="center">01</td>
+<td align="center">7</td>
+<td align="center">19</td>
+</tr>
+<tr>
+<td align="center">M</td>
+<td align="center">00</td>
+<td align="center">10</td>
+<td align="center">16</td>
+</tr>
+<tr>
+<td align="center">Q</td>
+<td align="center">11</td>
+<td align="center">13</td>
+<td align="center">13</td>
+</tr>
+<tr>
+<td align="center">H</td>
+<td align="center">10</td>
+<td align="center">17</td>
+<td align="center">9</td>
+</tr>
+</tbody></table>
+<h4 id="格式信息中的接下来3-bits用于指定对数据区域使用的掩码模式。"><a href="#格式信息中的接下来3-bits用于指定对数据区域使用的掩码模式。" class="headerlink" title="格式信息中的接下来3 bits用于指定对数据区域使用的掩码模式。"></a>格式信息中的接下来3 <em>bits</em>用于指定对数据区域使用的掩码模式。</h4><p>掩码模式使用6*6方格，根据需要覆盖区域进行掩码计算</p>
+<p>下方的计算式i，j分别表示行列（从左上角算起）</p>
+<p><img src="https://raw.githubusercontent.com/shiyi-ale/Image/main/Blog/image-20221027201918347.png" alt="image-20221027201918347"></p>
+<h4 id="格式信息中剩下的10-bits-是用于对格式信息本身的错误校验"><a href="#格式信息中剩下的10-bits-是用于对格式信息本身的错误校验" class="headerlink" title="格式信息中剩下的10 bits 是用于对格式信息本身的错误校验"></a>格式信息中剩下的10 <em>bits</em> 是用于对格式信息本身的错误校验</h4><h2 id="数据"><a href="#数据" class="headerlink" title="数据"></a>数据</h2><h3 id="反掩码操作后的的图样"><a href="#反掩码操作后的的图样" class="headerlink" title="反掩码操作后的的图样"></a>反掩码操作后的的图样</h3><p><img src="https://raw.githubusercontent.com/shiyi-ale/Image/main/Blog/image-20221027202239375.png" alt="image-20221027202239375"></p>
+<h3 id="数据如何读取"><a href="#数据如何读取" class="headerlink" title="数据如何读取"></a>数据如何读取</h3><h4 id="从右下角开始，沿着最右边的两列向上走“之”字形"><a href="#从右下角开始，沿着最右边的两列向上走“之”字形" class="headerlink" title="从右下角开始，沿着最右边的两列向上走“之”字形"></a>从右下角开始，沿着最右边的两列向上走“之”字形</h4><p><img src="https://raw.githubusercontent.com/shiyi-ale/Image/main/Blog/image-20221027202421447.png" alt="image-20221027202421447"></p>
+<p>前三个字节分别是 01000000 11010010 01110101</p>
+<p>一个字节Bytes&#x3D;8bit</p>
+<p><img src="https://raw.githubusercontent.com/shiyi-ale/Image/main/Blog/image-20221027202459121.png" alt="image-20221027202459121"></p>
+<h4 id="接下来两列从上向下读取，当读取到底部后，再反过来从下往上读取接下来两列"><a href="#接下来两列从上向下读取，当读取到底部后，再反过来从下往上读取接下来两列" class="headerlink" title="接下来两列从上向下读取，当读取到底部后，再反过来从下往上读取接下来两列"></a>接下来两列从上向下读取，当读取到底部后，再反过来从下往上读取接下来两列</h4><p><img src="https://raw.githubusercontent.com/shiyi-ale/Image/main/Blog/image-20221027202701684.png" alt="image-20221027202701684"></p>
+<h4 id="纠错码读取方式和原来一样"><a href="#纠错码读取方式和原来一样" class="headerlink" title="纠错码读取方式和原来一样"></a>纠错码读取方式和原来一样</h4><p>一直读到最左边的列</p>
+<p><img src="https://raw.githubusercontent.com/shiyi-ale/Image/main/Blog/image-20221027202759707.png" alt="image-20221027202759707"></p>
+<h4 id="十六进制表示的数据："><a href="#十六进制表示的数据：" class="headerlink" title="十六进制表示的数据："></a>十六进制表示的数据：</h4><p>进制转换</p>
+<p><img src="https://raw.githubusercontent.com/shiyi-ale/Image/main/Blog/image-20221027203047352.png" alt="image-20221027203047352"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">二进制：</span><br><span class="line">原始信息:</span><br><span class="line">0100000011010010011101010100--7   0111011101100001011100110010--7</span><br><span class="line">011000100111001001101001--6</span><br><span class="line">011011000110110001101001--6</span><br><span class="line">01100111000011101100--5</span><br><span class="line"></span><br><span class="line">错误纠正:001010101001000000010011011010111010111111101111111111000000000000000000....</span><br><span class="line">原始信息: 40 d2 75 47 76 17 32 06 27 26 96 c6 c6 96 70 ec</span><br><span class="line">错误纠正: bc 2a 90 13 6b af ef fd 4b e0</span><br></pre></td></tr></table></figure>
+
+<h2 id="解码"><a href="#解码" class="headerlink" title="解码"></a>解码</h2><h3 id="将信息解码成可读格式"><a href="#将信息解码成可读格式" class="headerlink" title="将信息解码成可读格式"></a>将信息解码成可读格式</h3><p>前4 <em>bits</em> 指明了信息是如何编码的</p>
+<h4 id="QR码的编码方案"><a href="#QR码的编码方案" class="headerlink" title="QR码的编码方案"></a>QR码的编码方案</h4><table>
+<thead>
+<tr>
+<th align="center">方案名称</th>
+<th align="center">模式指示器</th>
+<th align="center">长度字节数</th>
+<th align="center">数据字节数</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">数字</td>
+<td align="center">0001</td>
+<td align="center">10</td>
+<td align="center">10 <em>bits</em> per 3 digits</td>
+</tr>
+<tr>
+<td align="center">字母数字</td>
+<td align="center">0010</td>
+<td align="center">9</td>
+<td align="center">11 <em>bits</em> per 2 characters</td>
+</tr>
+<tr>
+<td align="center">字节</td>
+<td align="center">0100</td>
+<td align="center">8</td>
+<td align="center">8 <em>bits</em> per character</td>
+</tr>
+<tr>
+<td align="center">汉字</td>
+<td align="center">1000</td>
+<td align="center">8</td>
+<td align="center">13 <em>bits</em> per character</td>
+</tr>
+</tbody></table>
+<p>我们的样例数据开头是 0100表明接下来是每个字符8 <em>bits</em>，接下来8 <em>bits</em> 是长度字段</p>
+<p>00001101——-转为10进制——-13（8+4+1）</p>
+<p>表明有13个字符之后才是数据字符</p>
+<p>前两个是00100111和01010100（对于ASCII字符 ‘ 和 T）</p>
+<p><img src="https://raw.githubusercontent.com/shiyi-ale/Image/main/Blog/image-20221027204733677.png" alt="image-20221027204733677"></p>
+<p>使用微信扫扫看</p>
+<p><img src="https://raw.githubusercontent.com/shiyi-ale/Image/main/Blog/de349945566f64b9a25c4d344414d84.jpg" alt="de349945566f64b9a25c4d344414d84"></p>
+<p><strong>验证了对于ASCII字符 ‘ 和 T以及一共13个字符</strong></p>
+<p>在数据 <em>bit</em> 之后是另外一个4 <em>bit</em> 模式指示器</p>
+<p>可以跟前一个不同，从而允许在一个QR码中混合多个编码方案。如果没有其他数据了，用 0000 来标记结尾（注意，标准允许忽略这个标记，如果存储空间不够的话）。</p>
+<p><img src="https://raw.githubusercontent.com/shiyi-ale/Image/main/Blog/image-20221027210212414.png" alt="image-20221027210212414"></p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>总结一下：从二维码的视觉识别方法到RS码到BCH码,是一个编解码方法逐步追求本质的过程，下一节内容是关于BCH码以及Hamming code的详细分析，欢迎各位阅读。</p>
+
+  </div>
+  
+    
+      <a id="older" class="blog-nav" href="/2022/11/06/BCH%E4%B8%8EHammingCode/">OLDER&nbsp;&gt;</a>
+      
+        
+          <a id="newer" class="blog-nav" href="/2022/11/06/Dandelin-spheres/">&lt;&nbsp;NEWER</a>
+          
+            
+</div>
+        <div class="footer">
+  
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/shiyi-ale">KNOT 2022</a>
+        
+    </div>
+  
+    <div class="footer-more">
+      
+        KNOT--HEXO
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="back-to-top hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+      
+  <div class="search-icon" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-box">
+        <div class="search-title">
+          <!-- <span class="search-icon-input">
+            <a href="javascript: void(0)">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </span> -->
+          
+            <input type="text" class="search-input" id="search-input" placeholder="$ grep...">
+          
+          <span class="search-close-icon" id="search-close-icon">
+            <a href="javascript: void(0)">
+              <i class="iconfont icon-close"></i>
+            </a>
+          </span>
+        </div>
+        <div class="search-result" id="search-result"></div>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    // inputArea.onclick = function() {
+    //   getSearchFile()
+    //   this.onclick = null
+    // }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        inputArea.focus()
+        getSearchFile()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'><span></ul>";
+      // $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='/" + data_url + "' class='search-result-title'><h2>" + orig_data_title + "</h2></a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<h3 class=\"search-result-abstract\">" + match_content + "...</h3>"
+                }
+                str += "<hr></li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/leedom92/hexo-theme-leedom#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+    </div>
+  </body>
+</html>
