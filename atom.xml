@@ -6,7 +6,7 @@
   <link href="https://shiyi-ale.github.io/atom.xml" rel="self"/>
   
   <link href="https://shiyi-ale.github.io/"/>
-  <updated>2022-11-06T12:47:46.824Z</updated>
+  <updated>2022-11-10T11:02:48.789Z</updated>
   <id>https://shiyi-ale.github.io/</id>
   
   <author>
@@ -17,11 +17,32 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>zxing</title>
+    <link href="https://shiyi-ale.github.io/2022/11/10/zxing/"/>
+    <id>https://shiyi-ale.github.io/2022/11/10/zxing/</id>
+    <published>2022-11-10T11:02:19.000Z</published>
+    <updated>2022-11-10T11:02:48.789Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;zxing介绍&quot;&gt;&lt;a href=&quot;#zxing介绍&quot; class=&quot;headerlink&quot; title=&quot;zxing介绍&quot;&gt;&lt;/a&gt;zxing介绍&lt;/h2&gt;&lt;p&gt;zxing项目是谷歌推出的用来识别多种格式条形码的开源项目，项目地址为&lt;a</summary>
+        
+      
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
     <title>「数学」Dandelin spheres 更好的理解椭圆</title>
     <link href="https://shiyi-ale.github.io/2022/11/06/Dandelin-spheres/"/>
     <id>https://shiyi-ale.github.io/2022/11/06/Dandelin-spheres/</id>
     <published>2022-11-06T12:32:42.000Z</published>
-    <updated>2022-11-06T12:47:46.824Z</updated>
+    <updated>2022-11-10T10:53:49.801Z</updated>
     
     
       
@@ -36,6 +57,8 @@
     
     
     
+    <category term="数学" scheme="https://shiyi-ale.github.io/tags/%E6%95%B0%E5%AD%A6/"/>
+    
   </entry>
   
   <entry>
@@ -43,7 +66,7 @@
     <link href="https://shiyi-ale.github.io/2022/11/06/RS%E7%A0%81/"/>
     <id>https://shiyi-ale.github.io/2022/11/06/RS%E7%A0%81/</id>
     <published>2022-11-06T12:32:42.000Z</published>
-    <updated>2022-11-07T09:49:50.262Z</updated>
+    <updated>2022-11-10T10:53:56.008Z</updated>
     
     
       
@@ -57,6 +80,8 @@
     
     
     
+    <category term="密码学" scheme="https://shiyi-ale.github.io/tags/%E5%AF%86%E7%A0%81%E5%AD%A6/"/>
+    
   </entry>
   
   <entry>
@@ -64,7 +89,7 @@
     <link href="https://shiyi-ale.github.io/2022/11/06/BCH%E4%B8%8EHammingCode/"/>
     <id>https://shiyi-ale.github.io/2022/11/06/BCH%E4%B8%8EHammingCode/</id>
     <published>2022-11-06T12:32:42.000Z</published>
-    <updated>2022-11-07T09:49:31.454Z</updated>
+    <updated>2022-11-10T10:53:42.339Z</updated>
     
     
       
@@ -79,6 +104,8 @@
     
     
     
+    
+    <category term="密码学" scheme="https://shiyi-ale.github.io/tags/%E5%AF%86%E7%A0%81%E5%AD%A6/"/>
     
   </entry>
   

@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="EN">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="travel" />
+  <meta name="author" content="Knot" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      zxing 
+      
+      
+    
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Montserrat|Roboto:400,400italic,600|Roboto+Mono" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/iconfont/iconfont.css">
+
+
+  
+
+  
+    
+<link rel="stylesheet" href="/css/post.css">
+
+  
+
+  <!-- jquery3.3.1 -->
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+
+  <!-- fancybox -->
+  <link href="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.css" rel="stylesheet">
+  <script async src="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.js"></script>
+  
+<script src="/js/fancybox.js"></script>
+
+
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Knot" type="application/atom+xml">
+</head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <a href="/">KNOT</a>
+</div>
+
+
+      <p class="links">
+  
+    <a title="archives" target="" href="/archives/">
+      <i class="iconfont icon-bookmark"></i>
+    </a>
+  
+    <a title="github" target="_blank" href="">
+      <i class="iconfont icon-github"></i>
+    </a>
+  
+    <a title="rss" target="_blank" href="/atom.xml">
+      <i class="iconfont icon-rss"></i>
+    </a>
+  
+</p>
+
+
+      <div class="main">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+<!-- LaTex Display -->
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+</script>
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    }
+  };
+</script>
+
+<div class="post">
+  <h3 class="date">
+    Nov 10, 2022
+  </h3>
+  <h1>
+    zxing
+  </h1>
+  <div class="content markdown-body">
+    <h2 id="zxing介绍"><a href="#zxing介绍" class="headerlink" title="zxing介绍"></a>zxing介绍</h2><p>zxing项目是谷歌推出的用来识别多种格式条形码的开源项目，项目地址为<a target="_blank" rel="noopener" href="https://github.com/zxing/zxing">https://github.com/zxing/zxing</a>，zxing有多个人在维护，覆盖主流编程语言，也是目前还在维护的较受欢迎的二维码扫描开源项目之一。</p>
+<p>zxing的项目很庞大，主要的核心代码在<code>core</code>文件夹里面，也可以单独下载由这个文件夹打包而成的<code>jar</code>包，具体地址在<a target="_blank" rel="noopener" href="http://mvnrepository.com/artifact/com.google.zxing/core">http://mvnrepository.com/artifact/com.google.zxing/core</a>，直接下载jar包也省去了通过<code>maven</code>编译的麻烦，如果喜欢折腾的，可以从<a target="_blank" rel="noopener" href="https://github.com/zxing/zxing/wiki/Getting-Started-Developing">https://github.com/zxing/zxing/wiki/Getting-Started-Developing</a>获取帮助文档。  </p>
+<h2 id="zxing基本使用"><a href="#zxing基本使用" class="headerlink" title="zxing基本使用"></a>zxing基本使用</h2><p>官方提供了zxing在Android机子上的使用例子，<a target="_blank" rel="noopener" href="https://github.com/zxing/zxing/tree/master/android">https://github.com/zxing/zxing/tree/master/android</a>，作为官方的例子，zxing-android考虑了各种各样的情况，包括多种解析格式、解析得到的结果分类、长时间无活动自动销毁机制等。有时候我们需要根据自己的情况定制使用需求，因此会精简官方给的例子。在项目中，我们仅仅用来实现扫描二维码和识别图片二维码两个功能。为了实现高精度的二维码识别，在zxing原有项目的基础上，本文做了大量改进，使得二维码识别的效率有所提升。先来看看工程的项目结构。</p>
+<table style="border-collapse:collapse; border-spacing:0px; margin:0px; width:auto; border:none; font-size:14px; table-layout:fixed"><tbody><tr style="background-color:rgb(249,249,249)"><td class="gutter" style="padding:0px; vertical-align:middle; border:none"><pre style="overflow: auto; font-family: consolas, Menlo, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, monospace; font-size: 13px; margin-top: 0px; margin-bottom: 0px; padding: 1px 20px 1px 1px; color: rgb(102, 102, 102); background-color: rgb(29, 31, 33); line-height: 1.6; border: none; text-align: right; -webkit-user-select: auto;" data-index="0" class="" name="code"><span class="line" style="height:20px">1</span>
+<span class="line" style="height:20px">2</span>
+<span class="line" style="height:20px">3</span>
+<span class="line" style="height:20px">4</span>
+<span class="line" style="height:20px">5</span>
+<span class="line" style="height:20px">6</span>
+<span class="line" style="height:20px">7</span>
+<span class="line" style="height:20px">8</span>
+<span class="line" style="height:20px">9</span>
+<span class="line" style="height:20px">10</span>
+<span class="line" style="height:20px">11</span>
+<span class="line" style="height:20px">12</span>
+<span class="line" style="height:20px">13</span>
+<span class="line" style="height:20px">14</span>
+<span class="line" style="height:20px">15</span>
+<span class="line" style="height:20px">16</span>
+<span class="line" style="height:20px">17</span>
+<span class="line" style="height:20px">18</span>
+<span class="line" style="height:20px">19</span>
+<span class="line" style="height:20px">20</span>
+<span class="line" style="height:20px">21</span>
+</pre></td><td class="code" style="padding:0px; vertical-align:middle; border:none"><pre style="overflow: auto; font-family: consolas, Menlo, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, monospace; font-size: 13px; margin-top: 0px; margin-bottom: 0px; padding: 1px; color: rgb(197, 200, 198); background-color: rgb(29, 31, 33); line-height: 1.6; border: none; -webkit-user-select: auto;" data-index="1" class="" name="code"><span class="line" style="height:20px">.</span>
+<span class="line" style="height:20px">├── QrCodeActivity<span class="class">.java</span></span>
+<span class="line" style="height:20px">├── camera</span>
+<span class="line" style="height:20px">│&nbsp;&nbsp; ├── AutoFocusCallback<span class="class">.java</span></span>
+<span class="line" style="height:20px">│&nbsp;&nbsp; ├── CameraConfigurationManager<span class="class">.java</span></span>
+<span class="line" style="height:20px">│&nbsp;&nbsp; ├── CameraManager<span class="class">.java</span></span>
+<span class="line" style="height:20px">│&nbsp;&nbsp; └── PreviewCallback<span class="class">.java</span></span>
+<span class="line" style="height:20px">├── decode</span>
+<span class="line" style="height:20px">│&nbsp;&nbsp; ├── CaptureActivityHandler<span class="class">.java</span></span>
+<span class="line" style="height:20px">│&nbsp;&nbsp; ├── DecodeHandler<span class="class">.java</span></span>
+<span class="line" style="height:20px">│&nbsp;&nbsp; ├── DecodeImageCallback<span class="class">.java</span></span>
+<span class="line" style="height:20px">│&nbsp;&nbsp; ├── DecodeImageThread<span class="class">.java</span></span>
+<span class="line" style="height:20px">│&nbsp;&nbsp; ├── DecodeManager<span class="class">.java</span></span>
+<span class="line" style="height:20px">│&nbsp;&nbsp; ├── DecodeThread<span class="class">.java</span></span>
+<span class="line" style="height:20px">│&nbsp;&nbsp; ├── FinishListener<span class="class">.java</span></span>
+<span class="line" style="height:20px">│&nbsp;&nbsp; └── InactivityTimer<span class="class">.java</span></span>
+<span class="line" style="height:20px">├── utils</span>
+<span class="line" style="height:20px">│&nbsp;&nbsp; ├── QrUtils<span class="class">.java</span></span>
+<span class="line" style="height:20px">│&nbsp;&nbsp; └── ScreenUtils<span class="class">.java</span></span>
+<span class="line" style="height:20px">└── view</span>
+<span class="line" style="height:20px">    └── QrCodeFinderView.java</span>
+</pre></td></tr></tbody></table>
+
+<p>源码比较简单，这里不做过多地讲解，大部分方法都有注释。主要分为几大块，</p>
+<ul>
+<li>camera</li>
+</ul>
+<p>主要实现相机的配置和管理，相机自动聚焦功能，以及相机成像回调（通过<code>byte[]</code>数组返回实际的数据）。</p>
+<ul>
+<li>decode</li>
+</ul>
+<p>图片解析相关类。通过相机扫描二维码和解析图片使用两套逻辑。前者对实时性要求比较高，后者对解析结果要求较高，因此采用不同的配置。相机扫描主要在<code>DecodeHandler</code>里通过串行的方式解析，图片识别主要通过线程<code>DecodeImageThread</code>异步调用返回回调的结果。<code>FinishListener</code>和<code>InactivityTimer</code>用来控制长时间无活动时自动销毁创建的Activity，避免耗电。</p>
+<h2 id="扫描精度问题"><a href="#扫描精度问题" class="headerlink" title="扫描精度问题"></a>扫描精度问题</h2><p>使用过zxing自带的二维码扫描程序来识别二维码的童鞋应该知道，zxing二维码的扫描程序很慢，而且有可能扫不出来。zxing在配置相机参数和二维码扫描程序参数的时候，配置都比较保守，兼顾了低端手机，并且兼顾了多种条形码的识别。如果说仅仅是拿zxing项目来扫描和识别二维码的话，完全可以对项目中的一些配置做精简，并针对二维码的识别做优化。</p>
+<h3 id="PlanarYUVLuminanceSource"><a href="#PlanarYUVLuminanceSource" class="headerlink" title="PlanarYUVLuminanceSource"></a>PlanarYUVLuminanceSource</h3><p>官方的解码程序主要是下边这段代码：</p>
+<table style="border-collapse:collapse; border-spacing:0px; margin:0px; width:auto; border:none; font-size:14px; table-layout:fixed"><tbody><tr style="background-color:rgb(249,249,249)"><td class="gutter" style="padding:0px; vertical-align:middle; border:none"><pre style="overflow: auto; font-family: consolas, Menlo, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, monospace; font-size: 13px; margin-top: 0px; margin-bottom: 0px; padding: 1px 20px 1px 1px; color: rgb(102, 102, 102); background-color: rgb(29, 31, 33); line-height: 1.6; border: none; text-align: right; -webkit-user-select: auto;" data-index="2" class="" name="code"><span class="line" style="height:20px">1</span>
+<span class="line" style="height:20px">2</span>
+<span class="line" style="height:20px">3</span>
+<span class="line" style="height:20px">4</span>
+<span class="line" style="height:20px">5</span>
+<span class="line" style="height:20px">6</span>
+<span class="line" style="height:20px">7</span>
+<span class="line" style="height:20px">8</span>
+<span class="line" style="height:20px">9</span>
+<span class="line" style="height:20px">10</span>
+<span class="line" style="height:20px">11</span>
+<span class="line" style="height:20px">12</span>
+<span class="line" style="height:20px">13</span>
+<span class="line" style="height:20px">14</span>
+<span class="line" style="height:20px">15</span>
+<span class="line" style="height:20px">16</span>
+<span class="line" style="height:20px">17</span>
+<span class="line" style="height:20px">18</span>
+<span class="line" style="height:20px">19</span>
+<span class="line" style="height:20px">20</span>
+<span class="line" style="height:20px">21</span>
+</pre></td><td class="code" style="padding:0px; vertical-align:middle; border:none"><pre style="overflow: auto; font-family: consolas, Menlo, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, monospace; font-size: 13px; margin-top: 0px; margin-bottom: 0px; padding: 1px; color: rgb(197, 200, 198); background-color: rgb(29, 31, 33); line-height: 1.6; border: none; -webkit-user-select: auto;" data-index="3" class="" name="code"><span class="line" style="height:20px"><span class="keyword" style="color:rgb(178,148,187)">private</span> <span class="keyword" style="color:rgb(178,148,187)">void</span> decode(<span class="built_in" style="color:rgb(222,147,95)">byte</span>[] data, <span class="built_in" style="color:rgb(222,147,95)">int</span> <span class="variable" style="color:rgb(204,102,102)">width</span>, <span class="built_in" style="color:rgb(222,147,95)">int</span> <span class="variable" style="color:rgb(204,102,102)">height</span>) {<!-- --></span>
+<span class="line" style="height:20px">    <span class="keyword" style="color:rgb(178,148,187)">long</span> start = System.currentTimeMillis();</span>
+<span class="line" style="height:20px">    Result rawResult = <span class="keyword" style="color:rgb(178,148,187)">null</span>;</span>
+<span class="line" style="height:20px">    <span class="comment" style="color:rgb(150,152,150)">// 构造基于平面的YUV亮度源，即包含二维码区域的数据源</span></span>
+<span class="line" style="height:20px">    PlanarYUVLuminanceSource source = activity.getCameraManager().buildLuminanceSource(data, <span class="variable" style="color:rgb(204,102,102)">width</span>, <span class="variable" style="color:rgb(204,102,102)">height</span>);</span>
+<span class="line" style="height:20px">    <span class="keyword" style="color:rgb(178,148,187)">if</span> (source != <span class="keyword" style="color:rgb(178,148,187)">null</span>) {<!-- --></span>
+<span class="line" style="height:20px">        <span class="comment" style="color:rgb(150,152,150)">// 构造二值图像比特流，使用HybridBinarizer算法解析数据源</span></span>
+<span class="line" style="height:20px">        BinaryBitmap bitmap = <span class="keyword" style="color:rgb(178,148,187)">new</span> BinaryBitmap(<span class="keyword" style="color:rgb(178,148,187)">new</span> HybridBinarizer(source));</span>
+<span class="line" style="height:20px">        <span class="keyword" style="color:rgb(178,148,187)">try</span> {<!-- --></span>
+<span class="line" style="height:20px">            <span class="comment" style="color:rgb(150,152,150)">// 采用MultiFormatReader解析图像，可以解析多种数据格式</span></span>
+<span class="line" style="height:20px">            rawResult = multiFormatReader.decodeWithState(bitmap);</span>
+<span class="line" style="height:20px">        } <span class="keyword" style="color:rgb(178,148,187)">catch</span> (ReaderException re) {<!-- --></span>
+<span class="line" style="height:20px">            <span class="comment" style="color:rgb(150,152,150)">// continue</span></span>
+<span class="line" style="height:20px">        } <span class="keyword" style="color:rgb(178,148,187)">finally</span> {<!-- --></span>
+<span class="line" style="height:20px">            multiFormatReader.reset();</span>
+<span class="line" style="height:20px">        }</span>
+<span class="line" style="height:20px">    }</span>
+<span class="line" style="height:20px">	···</span>
+<span class="line" style="height:20px">	<span class="comment" style="color:rgb(150,152,150)">// Hanlder处理解析失败或成功的结果</span></span>
+<span class="line" style="height:20px">	···</span>
+<span class="line" style="height:20px">}</span>
+</pre></td></tr></tbody></table>
+
+<p>再来看看YUV亮度源是怎么构造的，在<code>CameraManager</code>里，首先获取预览图像的聚焦框矩形<code>getFramingRect()</code>，这个聚焦框的矩形大小是根据屏幕的宽高值来做计算的，官方定义了最小和最大的聚焦框大小，分别是<code>240*240</code>和<code>1200*675</code>，即最多的聚焦框大小为屏幕宽高的5&#x2F;8。获取屏幕的聚焦框大小后，还需要做从屏幕分辨率到相机分辨率的转换才能得到预览聚焦框的大小，这个转换在<code>getFramingRectInPreview()</code>里完成。这样便完成了亮度源的构造。</p>
+<table style="border-collapse:collapse; border-spacing:0px; margin:0px; width:auto; border:none; font-size:14px; table-layout:fixed"><tbody><tr style="background-color:rgb(249,249,249)"><td class="gutter" style="padding:0px; vertical-align:middle; border:none"><pre style="overflow: auto; font-family: consolas, Menlo, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, monospace; font-size: 13px; margin-top: 0px; margin-bottom: 0px; padding: 1px 20px 1px 1px; color: rgb(102, 102, 102); background-color: rgb(29, 31, 33); line-height: 1.6; border: none; text-align: right; -webkit-user-select: auto;" data-index="4" class="" name="code"><span class="line" style="height:20px">1</span>
+<span class="line" style="height:20px">2</span>
+<span class="line" style="height:20px">3</span>
+<span class="line" style="height:20px">4</span>
+<span class="line" style="height:20px">5</span>
+<span class="line" style="height:20px">6</span>
+<span class="line" style="height:20px">7</span>
+<span class="line" style="height:20px">8</span>
+<span class="line" style="height:20px">9</span>
+<span class="line" style="height:20px">10</span>
+<span class="line" style="height:20px">11</span>
+<span class="line" style="height:20px">12</span>
+<span class="line" style="height:20px">13</span>
+<span class="line" style="height:20px">14</span>
+<span class="line" style="height:20px">15</span>
+<span class="line" style="height:20px">16</span>
+<span class="line" style="height:20px">17</span>
+<span class="line" style="height:20px">18</span>
+<span class="line" style="height:20px">19</span>
+<span class="line" style="height:20px">20</span>
+<span class="line" style="height:20px">21</span>
+<span class="line" style="height:20px">22</span>
+<span class="line" style="height:20px">23</span>
+<span class="line" style="height:20px">24</span>
+<span class="line" style="height:20px">25</span>
+<span class="line" style="height:20px">26</span>
+<span class="line" style="height:20px">27</span>
+<span class="line" style="height:20px">28</span>
+<span class="line" style="height:20px">29</span>
+<span class="line" style="height:20px">30</span>
+<span class="line" style="height:20px">31</span>
+<span class="line" style="height:20px">32</span>
+<span class="line" style="height:20px">33</span>
+<span class="line" style="height:20px">34</span>
+<span class="line" style="height:20px">35</span>
+<span class="line" style="height:20px">36</span>
+<span class="line" style="height:20px">37</span>
+<span class="line" style="height:20px">38</span>
+<span class="line" style="height:20px">39</span>
+<span class="line" style="height:20px">40</span>
+<span class="line" style="height:20px">41</span>
+<span class="line" style="height:20px">42</span>
+<span class="line" style="height:20px">43</span>
+<span class="line" style="height:20px">44</span>
+<span class="line" style="height:20px">45</span>
+<span class="line" style="height:20px">46</span>
+<span class="line" style="height:20px">47</span>
+<span class="line" style="height:20px">48</span>
+<span class="line" style="height:20px">49</span>
+<span class="line" style="height:20px">50</span>
+<span class="line" style="height:20px">51</span>
+<span class="line" style="height:20px">52</span>
+<span class="line" style="height:20px">53</span>
+<span class="line" style="height:20px">54</span>
+<span class="line" style="height:20px">55</span>
+<span class="line" style="height:20px">56</span>
+<span class="line" style="height:20px">57</span>
+<span class="line" style="height:20px">58</span>
+<span class="line" style="height:20px">59</span>
+<span class="line" style="height:20px">60</span>
+<span class="line" style="height:20px">61</span>
+<span class="line" style="height:20px">62</span>
+<span class="line" style="height:20px">63</span>
+<span class="line" style="height:20px">64</span>
+<span class="line" style="height:20px">65</span>
+<span class="line" style="height:20px">66</span>
+<span class="line" style="height:20px">67</span>
+<span class="line" style="height:20px">68</span>
+<span class="line" style="height:20px">69</span>
+<span class="line" style="height:20px">70</span>
+<span class="line" style="height:20px">71</span>
+<span class="line" style="height:20px">72</span>
+<span class="line" style="height:20px">73</span>
+<span class="line" style="height:20px">74</span>
+<span class="line" style="height:20px">75</span>
+<span class="line" style="height:20px">76</span>
+<span class="line" style="height:20px">77</span>
+<span class="line" style="height:20px">78</span>
+<span class="line" style="height:20px">79</span>
+<span class="line" style="height:20px">80</span>
+<span class="line" style="height:20px">81</span>
+<span class="line" style="height:20px">82</span>
+<span class="line" style="height:20px">83</span>
+<span class="line" style="height:20px">84</span>
+<span class="line" style="height:20px">85</span>
+<span class="line" style="height:20px">86</span>
+<span class="line" style="height:20px">87</span>
+<span class="line" style="height:20px">88</span>
+<span class="line" style="height:20px">89</span>
+<span class="line" style="height:20px">90</span>
+<span class="line" style="height:20px">91</span>
+<span class="line" style="height:20px">92</span>
+<span class="line" style="height:20px">93</span>
+<span class="line" style="height:20px">94</span>
+<span class="line" style="height:20px">95</span>
+</pre></td><td class="code" style="padding:0px; vertical-align:middle; border:none"><pre style="overflow: auto; font-family: consolas, Menlo, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, monospace; font-size: 13px; margin-top: 0px; margin-bottom: 0px; padding: 1px; color: rgb(197, 200, 198); background-color: rgb(29, 31, 33); line-height: 1.6; border: none; -webkit-user-select: auto;" data-index="5" class="" name="code"><span class="line" style="height:20px"><span class="keyword" style="color:rgb(178,148,187)">private</span> <span class="keyword" style="color:rgb(178,148,187)">static</span> <span class="keyword" style="color:rgb(178,148,187)">final</span> <span class="built_in" style="color:rgb(222,147,95)">int</span> MIN_FRAME_WIDTH = <span class="number" style="color:rgb(181,189,104)">240</span>;</span>
+<span class="line" style="height:20px"><span class="keyword" style="color:rgb(178,148,187)">private</span> <span class="keyword" style="color:rgb(178,148,187)">static</span> <span class="keyword" style="color:rgb(178,148,187)">final</span> <span class="built_in" style="color:rgb(222,147,95)">int</span> MIN_FRAME_HEIGHT = <span class="number" style="color:rgb(181,189,104)">240</span>;</span>
+<span class="line" style="height:20px"><span class="keyword" style="color:rgb(178,148,187)">private</span> <span class="keyword" style="color:rgb(178,148,187)">static</span> <span class="keyword" style="color:rgb(178,148,187)">final</span> <span class="built_in" style="color:rgb(222,147,95)">int</span> MAX_FRAME_WIDTH = <span class="number" style="color:rgb(181,189,104)">1200</span>; <span class="comment" style="color:rgb(150,152,150)">// = 5/8 * 1920</span></span>
+<span class="line" style="height:20px"><span class="keyword" style="color:rgb(178,148,187)">private</span> <span class="keyword" style="color:rgb(178,148,187)">static</span> <span class="keyword" style="color:rgb(178,148,187)">final</span> <span class="built_in" style="color:rgb(222,147,95)">int</span> MAX_FRAME_HEIGHT = <span class="number" style="color:rgb(181,189,104)">675</span>; <span class="comment" style="color:rgb(150,152,150)">// = 5/8 * 1080</span></span>
+<span class="line" style="height:20px"></span>
+<span class="line" style="height:20px"><span class="comment" style="color:rgb(150,152,150)">/**</span>
+<span class="line" style="height:20px"> * A factory method to build the appropriate LuminanceSource object based on the format of the preview buffers, as</span>
+<span class="line" style="height:20px"> * described by Camera.Parameters.</span>
+<span class="line" style="height:20px"> *</span>
+<span class="line" style="height:20px"> * @param data A preview frame.</span>
+<span class="line" style="height:20px"> * @param width The width of the image.</span>
+<span class="line" style="height:20px"> * @param height The height of the image.</span>
+<span class="line" style="height:20px"> * @return A PlanarYUVLuminanceSource instance.</span>
+<span class="line" style="height:20px"> */</span></span>
+<span class="line" style="height:20px"><span class="keyword" style="color:rgb(178,148,187)">public</span> PlanarYUVLuminanceSource buildLuminanceSource(<span class="built_in" style="color:rgb(222,147,95)">byte</span>[] data, <span class="built_in" style="color:rgb(222,147,95)">int</span> <span class="variable" style="color:rgb(204,102,102)">width</span>, <span class="built_in" style="color:rgb(222,147,95)">int</span> <span class="variable" style="color:rgb(204,102,102)">height</span>) {<!-- --></span>
+<span class="line" style="height:20px">    <span class="comment" style="color:rgb(150,152,150)">// 取得预览框内的矩形</span></span>
+<span class="line" style="height:20px">    Rect <span class="built_in" style="color:rgb(222,147,95)">rect</span> = getFramingRectInPreview();</span>
+<span class="line" style="height:20px">    <span class="keyword" style="color:rgb(178,148,187)">if</span> (<span class="built_in" style="color:rgb(222,147,95)">rect</span> == <span class="keyword" style="color:rgb(178,148,187)">null</span>) {<!-- --></span>
+<span class="line" style="height:20px">        <span class="keyword" style="color:rgb(178,148,187)">return</span> <span class="keyword" style="color:rgb(178,148,187)">null</span>;</span>
+<span class="line" style="height:20px">    }</span>
+<span class="line" style="height:20px">    <span class="comment" style="color:rgb(150,152,150)">// Go ahead and assume it's YUV rather than die.</span></span>
+<span class="line" style="height:20px">    <span class="keyword" style="color:rgb(178,148,187)">return</span> <span class="keyword" style="color:rgb(178,148,187)">new</span> PlanarYUVLuminanceSource(data, <span class="variable" style="color:rgb(204,102,102)">width</span>, <span class="variable" style="color:rgb(204,102,102)">height</span>, <span class="built_in" style="color:rgb(222,147,95)">rect</span>.left, <span class="built_in" style="color:rgb(222,147,95)">rect</span>.top, <span class="built_in" style="color:rgb(222,147,95)">rect</span>.<span class="variable" style="color:rgb(204,102,102)">width</span>(), <span class="built_in" style="color:rgb(222,147,95)">rect</span>.<span class="variable" style="color:rgb(204,102,102)">height</span>(),</span>
+<span class="line" style="height:20px">        <span class="keyword" style="color:rgb(178,148,187)">false</span>);</span>
+<span class="line" style="height:20px">}</span>
+<span class="line" style="height:20px"></span>
+<span class="line" style="height:20px"><span class="comment" style="color:rgb(150,152,150)">/**</span>
+<span class="line" style="height:20px"> * Like {@link #getFramingRect} but coordinates are in terms of the preview frame, not UI / screen.</span>
+<span class="line" style="height:20px"> *</span>
+<span class="line" style="height:20px"> * @return {@link Rect} expressing barcode scan area in terms of the preview size</span>
+<span class="line" style="height:20px"> */</span></span>
+<span class="line" style="height:20px"><span class="keyword" style="color:rgb(178,148,187)">public</span> <span class="keyword" style="color:rgb(178,148,187)">synchronized</span> Rect getFramingRectInPreview() {<!-- --></span>
+<span class="line" style="height:20px">    <span class="keyword" style="color:rgb(178,148,187)">if</span> (framingRectInPreview == <span class="keyword" style="color:rgb(178,148,187)">null</span>) {<!-- --></span>
+<span class="line" style="height:20px">        Rect framingRect = getFramingRect();</span>
+<span class="line" style="height:20px">        <span class="keyword" style="color:rgb(178,148,187)">if</span> (framingRect == <span class="keyword" style="color:rgb(178,148,187)">null</span>) {<!-- --></span>
+<span class="line" style="height:20px">            <span class="keyword" style="color:rgb(178,148,187)">return</span> <span class="keyword" style="color:rgb(178,148,187)">null</span>;</span>
+<span class="line" style="height:20px">        }</span>
+<span class="line" style="height:20px">        <span class="comment" style="color:rgb(150,152,150)">// 获取相机分辨率和屏幕分辨率</span></span>
+<span class="line" style="height:20px">        Rect <span class="built_in" style="color:rgb(222,147,95)">rect</span> = <span class="keyword" style="color:rgb(178,148,187)">new</span> Rect(framingRect);</span>
+<span class="line" style="height:20px">        Point cameraResolution = configManager.getCameraResolution();</span>
+<span class="line" style="height:20px">        Point screenResolution = configManager.getScreenResolution();</span>
+<span class="line" style="height:20px">        <span class="keyword" style="color:rgb(178,148,187)">if</span> (cameraResolution == <span class="keyword" style="color:rgb(178,148,187)">null</span> || screenResolution == <span class="keyword" style="color:rgb(178,148,187)">null</span>) {<!-- --></span>
+<span class="line" style="height:20px">            <span class="comment" style="color:rgb(150,152,150)">// Called early, before init even finished</span></span>
+<span class="line" style="height:20px">            <span class="keyword" style="color:rgb(178,148,187)">return</span> <span class="keyword" style="color:rgb(178,148,187)">null</span>;</span>
+<span class="line" style="height:20px">        }</span>
+<span class="line" style="height:20px">        <span class="comment" style="color:rgb(150,152,150)">// 根据相机分辨率和屏幕分辨率的比例对屏幕中央聚焦框进行调整</span></span>
+<span class="line" style="height:20px">        <span class="built_in" style="color:rgb(222,147,95)">rect</span>.left = <span class="built_in" style="color:rgb(222,147,95)">rect</span>.left * cameraResolution.x / screenResolution.x;</span>
+<span class="line" style="height:20px">        <span class="built_in" style="color:rgb(222,147,95)">rect</span>.right = <span class="built_in" style="color:rgb(222,147,95)">rect</span>.right * cameraResolution.x / screenResolution.x;</span>
+<span class="line" style="height:20px">        <span class="built_in" style="color:rgb(222,147,95)">rect</span>.top = <span class="built_in" style="color:rgb(222,147,95)">rect</span>.top * cameraResolution.y / screenResolution.y;</span>
+<span class="line" style="height:20px">        <span class="built_in" style="color:rgb(222,147,95)">rect</span>.bottom = <span class="built_in" style="color:rgb(222,147,95)">rect</span>.bottom * cameraResolution.y / screenResolution.y;</span>
+<span class="line" style="height:20px">        framingRectInPreview = <span class="built_in" style="color:rgb(222,147,95)">rect</span>;</span>
+<span class="line" style="height:20px">    }</span>
+<span class="line" style="height:20px">    <span class="keyword" style="color:rgb(178,148,187)">return</span> framingRectInPreview;</span>
+<span class="line" style="height:20px">}</span>
+<span class="line" style="height:20px"></span>
+<span class="line" style="height:20px"><span class="comment" style="color:rgb(150,152,150)">/**</span>
+<span class="line" style="height:20px"> * Calculates the framing rect which the UI should draw to show the user where to place the barcode. This target</span>
+<span class="line" style="height:20px"> * helps with alignment as well as forces the user to hold the device far enough away to ensure the image will be in</span>
+<span class="line" style="height:20px"> * focus.</span>
+<span class="line" style="height:20px"> *</span>
+<span class="line" style="height:20px"> * @return The rectangle to draw on screen in window coordinates.</span>
+<span class="line" style="height:20px"> */</span></span>
+<span class="line" style="height:20px"><span class="keyword" style="color:rgb(178,148,187)">public</span> <span class="keyword" style="color:rgb(178,148,187)">synchronized</span> Rect getFramingRect() {<!-- --></span>
+<span class="line" style="height:20px">    <span class="keyword" style="color:rgb(178,148,187)">if</span> (framingRect == <span class="keyword" style="color:rgb(178,148,187)">null</span>) {<!-- --></span>
+<span class="line" style="height:20px">        <span class="keyword" style="color:rgb(178,148,187)">if</span> (<span class="built_in" style="color:rgb(222,147,95)">camera</span> == <span class="keyword" style="color:rgb(178,148,187)">null</span>) {<!-- --></span>
+<span class="line" style="height:20px">            <span class="keyword" style="color:rgb(178,148,187)">return</span> <span class="keyword" style="color:rgb(178,148,187)">null</span>;</span>
+<span class="line" style="height:20px">        }</span>
+<span class="line" style="height:20px">        <span class="comment" style="color:rgb(150,152,150)">// 获取屏幕的尺寸像素</span></span>
+<span class="line" style="height:20px">        Point screenResolution = configManager.getScreenResolution();</span>
+<span class="line" style="height:20px">        <span class="keyword" style="color:rgb(178,148,187)">if</span> (screenResolution == <span class="keyword" style="color:rgb(178,148,187)">null</span>) {<!-- --></span>
+<span class="line" style="height:20px">            <span class="comment" style="color:rgb(150,152,150)">// Called early, before init even finished</span></span>
+<span class="line" style="height:20px">            <span class="keyword" style="color:rgb(178,148,187)">return</span> <span class="keyword" style="color:rgb(178,148,187)">null</span>;</span>
+<span class="line" style="height:20px">        }</span>
+<span class="line" style="height:20px">        <span class="comment" style="color:rgb(150,152,150)">// 根据屏幕的宽高找到最合适的矩形框宽高值</span></span>
+<span class="line" style="height:20px">        <span class="built_in" style="color:rgb(222,147,95)">int</span> <span class="variable" style="color:rgb(204,102,102)">width</span> = findDesiredDimensionInRange(screenResolution.x, MIN_FRAME_WIDTH, MAX_FRAME_WIDTH);</span>
+<span class="line" style="height:20px">        <span class="built_in" style="color:rgb(222,147,95)">int</span> <span class="variable" style="color:rgb(204,102,102)">height</span> = findDesiredDimensionInRange(screenResolution.y, MIN_FRAME_HEIGHT, MAX_FRAME_HEIGHT);</span>
+<span class="line" style="height:20px"></span>
+<span class="line" style="height:20px">        <span class="comment" style="color:rgb(150,152,150)">// 取屏幕中间的，宽为width，高为height的矩形框</span></span>
+<span class="line" style="height:20px">        <span class="built_in" style="color:rgb(222,147,95)">int</span> leftOffset = (screenResolution.x - <span class="variable" style="color:rgb(204,102,102)">width</span>) / <span class="number" style="color:rgb(181,189,104)">2</span>;</span>
+<span class="line" style="height:20px">        <span class="built_in" style="color:rgb(222,147,95)">int</span> topOffset = (screenResolution.y - <span class="variable" style="color:rgb(204,102,102)">height</span>) / <span class="number" style="color:rgb(181,189,104)">2</span>;</span>
+<span class="line" style="height:20px">        framingRect = <span class="keyword" style="color:rgb(178,148,187)">new</span> Rect(leftOffset, topOffset, leftOffset + <span class="variable" style="color:rgb(204,102,102)">width</span>, topOffset + <span class="variable" style="color:rgb(204,102,102)">height</span>);</span>
+<span class="line" style="height:20px">        Log.d(TAG, <span class="string" style="color:rgb(181,189,104)">"Calculated framing rect: "</span> + framingRect);</span>
+<span class="line" style="height:20px">    }</span>
+<span class="line" style="height:20px">    <span class="keyword" style="color:rgb(178,148,187)">return</span> framingRect;</span>
+<span class="line" style="height:20px">}</span>
+<span class="line" style="height:20px"></span>
+<span class="line" style="height:20px"><span class="keyword" style="color:rgb(178,148,187)">private</span> <span class="keyword" style="color:rgb(178,148,187)">static</span> <span class="built_in" style="color:rgb(222,147,95)">int</span> findDesiredDimensionInRange(<span class="built_in" style="color:rgb(222,147,95)">int</span> resolution, <span class="built_in" style="color:rgb(222,147,95)">int</span> hardMin, <span class="built_in" style="color:rgb(222,147,95)">int</span> hardMax) {<!-- --></span>
+<span class="line" style="height:20px">    <span class="built_in" style="color:rgb(222,147,95)">int</span> dim = <span class="number" style="color:rgb(181,189,104)">5</span> * resolution / <span class="number" style="color:rgb(181,189,104)">8</span>; <span class="comment" style="color:rgb(150,152,150)">// Target 5/8 of each dimension</span></span>
+<span class="line" style="height:20px">    <span class="keyword" style="color:rgb(178,148,187)">if</span> (dim &lt; hardMin) {<!-- --></span>
+<span class="line" style="height:20px">        <span class="keyword" style="color:rgb(178,148,187)">return</span> hardMin;</span>
+<span class="line" style="height:20px">    }</span>
+<span class="line" style="height:20px">    <span class="keyword" style="color:rgb(178,148,187)">if</span> (dim &gt; hardMax) {<!-- --></span>
+<span class="line" style="height:20px">        <span class="keyword" style="color:rgb(178,148,187)">return</span> hardMax;</span>
+<span class="line" style="height:20px">    }</span>
+<span class="line" style="height:20px">    <span class="keyword" style="color:rgb(178,148,187)">return</span> dim;</span>
+<span class="line" style="height:20px">}</span>
+</pre></td></tr></tbody></table>
+
+<p>这段代码并没有什么问题，也完全符合逻辑。但为什么在扫描的时候这么难扫到二维码呢，原因在于官方为了减少解码的数据，提高解码效率和速度，采用了<strong>裁剪无用区域的方式</strong>。这样会带来一定的问题，整个二维码数据需要完全放到聚焦框里才有可能被识别，并且在<code>buildLuminanceSource(byte[],int,int)</code>这个方法签名中，传入的byte数组便是图像的数据，并没有因为裁剪而使数据量减小，而是采用了取这个数组中的部分数据来达到裁剪的目的。对于目前CPU性能过剩的大多数智能手机来说，这种裁剪显得没有必要。如果把解码数据换成采用全幅图像数据，这样在识别的过程中便不再拘束于聚焦框，也使得二维码数据可以铺满整个屏幕。这样用户在使用程序来扫描二维码时，尽管不完全对准聚焦框，也可以识别出来。这属于一种策略上的让步，给用户造成了错觉，但提高了识别的精度。</p>
+<p>解决办法很简单，就是不仅仅使用聚焦框里的图像数据，而是采用全幅图像的数据。</p>
+<table style="border-collapse:collapse; border-spacing:0px; margin:0px; width:auto; border:none; font-size:14px; table-layout:fixed"><tbody><tr style="background-color:rgb(249,249,249)"><td class="gutter" style="padding:0px; vertical-align:middle; border:none"><pre style="overflow: auto; font-family: consolas, Menlo, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, monospace; font-size: 13px; margin-top: 0px; margin-bottom: 0px; padding: 1px 20px 1px 1px; color: rgb(102, 102, 102); background-color: rgb(29, 31, 33); line-height: 1.6; border: none; text-align: right; -webkit-user-select: auto;" data-index="6"><span class="line" style="height:20px">1</span>
+<span class="line" style="height:20px">2</span>
+<span class="line" style="height:20px">3</span>
+<span class="line" style="height:20px">4</span>
+</pre></td><td class="code" style="padding:0px; vertical-align:middle; border:none"><pre style="overflow: auto; font-family: consolas, Menlo, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, monospace; font-size: 13px; margin-top: 0px; margin-bottom: 0px; padding: 1px; color: rgb(197, 200, 198); background-color: rgb(29, 31, 33); line-height: 1.6; border: none; -webkit-user-select: auto;" data-index="7"><span class="line" style="height:20px"><span class="keyword" style="color:rgb(178,148,187)">public</span> PlanarYUVLuminanceSource buildLuminanceSource(<span class="built_in" style="color:rgb(222,147,95)">byte</span>[] data, <span class="built_in" style="color:rgb(222,147,95)">int</span> <span class="variable" style="color:rgb(204,102,102)">width</span>, <span class="built_in" style="color:rgb(222,147,95)">int</span> <span class="variable" style="color:rgb(204,102,102)">height</span>) {<!-- --></span>
+<span class="line" style="height:20px">    <span class="comment" style="color:rgb(150,152,150)">// 直接返回整幅图像的数据，而不计算聚焦框大小。</span></span>
+<span class="line" style="height:20px">    <span class="keyword" style="color:rgb(178,148,187)">return</span> <span class="keyword" style="color:rgb(178,148,187)">new</span> PlanarYUVLuminanceSource(data, <span class="variable" style="color:rgb(204,102,102)">width</span>, <span class="variable" style="color:rgb(204,102,102)">height</span>, <span class="number" style="color:rgb(181,189,104)">0</span>, <span class="number" style="color:rgb(181,189,104)">0</span>, <span class="variable" style="color:rgb(204,102,102)">width</span>, <span class="variable" style="color:rgb(204,102,102)">height</span>, <span class="keyword" style="color:rgb(178,148,187)">false</span>);</span>
+<span class="line" style="height:20px">}</span>
+</pre></td></tr></tbody></table>
+
+<h3 id="DecodeHintType"><a href="#DecodeHintType" class="headerlink" title="DecodeHintType"></a>DecodeHintType</h3><p>在使用zxing解析二维码时，允许事先进行相关配置，这个文件通过<code>Map&lt;DecodeHintType, ?&gt;</code>键值对来保存，然后使用方法<code>public void setHints(Map&lt;DecodeHintType,?&gt; hints)</code>来设置到相应的解码器中。DecodeHintType是一个枚举类，其中有几个重要的枚举值，</p>
+<ul>
+<li>POSSIBLE_FORMATS(List.class)</li>
+</ul>
+<p>用于列举支持的解析格式，一共有17种，在<code>com.google.zxing.BarcodeFormat</code>里定义。官方默认支持所有的格式。</p>
+<ul>
+<li>TRY_HARDER(Void.class)</li>
+</ul>
+<p>是否使用HARDER模式来解析数据，如果启用，则会花费更多的时间去解析二维码，对精度有优化，对速度则没有。</p>
+<ul>
+<li>CHARACTER_SET(String.class)</li>
+</ul>
+<p>解析的字符集。这个对解析也比较关键，最好定义需要解析数据对应的字符集。</p>
+<p>如果项目仅仅用来解析二维码，完全没必要支持所有的格式，也没有必要使用<code>MultiFormatReader</code>来解析。所以在配置的过程中，我移除了所有与二维码不相关的代码。直接使用<code>QRCodeReader</code>类来解析，字符集采用utf-8，使用Harder模式，并且把可能的解析格式只定义为<code>BarcodeFormat.QR_CODE</code>，这对于直接二维码扫描解析无疑是帮助最大的。</p>
+<table style="border-collapse:collapse; border-spacing:0px; margin:0px; width:auto; border:none; font-size:14px; table-layout:fixed"><tbody><tr style="background-color:rgb(249,249,249)"><td class="gutter" style="padding:0px; vertical-align:middle; border:none"><pre style="overflow: auto; font-family: consolas, Menlo, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, monospace; font-size: 13px; margin-top: 0px; margin-bottom: 0px; padding: 1px 20px 1px 1px; color: rgb(102, 102, 102); background-color: rgb(29, 31, 33); line-height: 1.6; border: none; text-align: right; -webkit-user-select: auto;" data-index="8"><span class="line" style="height:20px">1</span>
+<span class="line" style="height:20px">2</span>
+<span class="line" style="height:20px">3</span>
+<span class="line" style="height:20px">4</span>
+<span class="line" style="height:20px">5</span>
+<span class="line" style="height:20px">6</span>
+<span class="line" style="height:20px">7</span>
+<span class="line" style="height:20px">8</span>
+<span class="line" style="height:20px">9</span>
+</pre></td><td class="code" style="padding:0px; vertical-align:middle; border:none"><pre style="overflow: auto; font-family: consolas, Menlo, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, monospace; font-size: 13px; margin-top: 0px; margin-bottom: 0px; padding: 1px; color: rgb(197, 200, 198); background-color: rgb(29, 31, 33); line-height: 1.6; border: none; -webkit-user-select: auto;" data-index="9"><span class="line" style="height:20px"><span class="keyword" style="color:rgb(178,148,187)">private</span> <span class="keyword" style="color:rgb(178,148,187)">final</span> Map&lt;DecodeHintType, Object&gt; mHints;</span>
+<span class="line" style="height:20px">DecodeHandler(QrCodeActivity activity) {<!-- --></span>
+<span class="line" style="height:20px">    <span class="keyword" style="color:rgb(178,148,187)">this</span>.mActivity = activity;</span>
+<span class="line" style="height:20px">    mQrCodeReader = <span class="keyword" style="color:rgb(178,148,187)">new</span> QRCodeReader();</span>
+<span class="line" style="height:20px">    mHints = <span class="keyword" style="color:rgb(178,148,187)">new</span> Hashtable&lt;&gt;();</span>
+<span class="line" style="height:20px">    mHints.put(DecodeHintType.CHARACTER_SET, <span class="string" style="color:rgb(181,189,104)">"utf-8"</span>);</span>
+<span class="line" style="height:20px">    mHints.put(DecodeHintType.TRY_HARDER, <span class="keyword" style="color:rgb(178,148,187)">Boolean</span>.<span class="keyword" style="color:rgb(178,148,187)">TRUE</span>);</span>
+<span class="line" style="height:20px">    mHints.put(DecodeHintType.POSSIBLE_FORMATS, BarcodeFormat.QR_CODE);</span>
+<span class="line" style="height:20px">}</span>
+</pre></td></tr></tbody></table>
+
+<h1 id="二维码图像识别精度探究"><a href="#二维码图像识别精度探究" class="headerlink" title="二维码图像识别精度探究"></a>二维码图像识别精度探究</h1><h2 id="图像-x2F-像素编码格式"><a href="#图像-x2F-像素编码格式" class="headerlink" title="图像&#x2F;像素编码格式"></a>图像&#x2F;像素编码格式</h2><p>Android相机预览的时候支持几种不同的格式，从图像的角度（<a target="_blank" rel="noopener" href="http://developer.android.com/intl/zh-cn/reference/android/graphics/ImageFormat.html">ImageFormat</a>）来说有NV16、NV21、YUY2、YV12、RGB_565和JPEG，从像素的角度（<a target="_blank" rel="noopener" href="http://developer.android.com/intl/zh-cn/reference/android/graphics/PixelFormat.html">PixelFormat</a>）来说，有YUV422SP、YUV420SP、YUV422I、YUV420P、RGB565和JPEG，它们之间的对应关系可以从<code>Camera.Parameters.cameraFormatForPixelFormat(int)</code>方法中得到。</p>
+<table style="border-collapse:collapse; border-spacing:0px; margin:0px; width:auto; border:none; font-size:14px; table-layout:fixed"><tbody><tr style="background-color:rgb(249,249,249)"><td class="gutter" style="padding:0px; vertical-align:middle; border:none"><pre style="overflow: auto; font-family: consolas, Menlo, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, monospace; font-size: 13px; margin-top: 0px; margin-bottom: 0px; padding: 1px 20px 1px 1px; color: rgb(102, 102, 102); background-color: rgb(29, 31, 33); line-height: 1.6; border: none; text-align: right; -webkit-user-select: auto;" data-index="10"><span class="line" style="height:20px">1</span>
+<span class="line" style="height:20px">2</span>
+<span class="line" style="height:20px">3</span>
+<span class="line" style="height:20px">4</span>
+<span class="line" style="height:20px">5</span>
+<span class="line" style="height:20px">6</span>
+<span class="line" style="height:20px">7</span>
+<span class="line" style="height:20px">8</span>
+<span class="line" style="height:20px">9</span>
+<span class="line" style="height:20px">10</span>
+<span class="line" style="height:20px">11</span>
+</pre></td><td class="code" style="padding:0px; vertical-align:middle; border:none"><pre style="overflow: auto; font-family: consolas, Menlo, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, monospace; font-size: 13px; margin-top: 0px; margin-bottom: 0px; padding: 1px; color: rgb(197, 200, 198); background-color: rgb(29, 31, 33); line-height: 1.6; border: none; -webkit-user-select: auto;" data-index="11"><span class="line" style="height:20px"><span class="keyword" style="color:rgb(178,148,187)">private</span> String cameraFormatForPixelFormat(<span class="typename">int</span> pixel_format) {<!-- --></span>
+<span class="line" style="height:20px">    <span class="keyword" style="color:rgb(178,148,187)">switch</span>(pixel_format) {<!-- --></span>
+<span class="line" style="height:20px">    <span class="keyword" style="color:rgb(178,148,187)">case</span> ImageFormat.<span class="string" style="color:rgb(181,189,104)">NV16:</span>      <span class="keyword" style="color:rgb(178,148,187)">return</span> PIXEL_FORMAT_YUV422SP;</span>
+<span class="line" style="height:20px">    <span class="keyword" style="color:rgb(178,148,187)">case</span> ImageFormat.<span class="string" style="color:rgb(181,189,104)">NV21:</span>      <span class="keyword" style="color:rgb(178,148,187)">return</span> PIXEL_FORMAT_YUV420SP;</span>
+<span class="line" style="height:20px">    <span class="keyword" style="color:rgb(178,148,187)">case</span> ImageFormat.<span class="string" style="color:rgb(181,189,104)">YUY2:</span>      <span class="keyword" style="color:rgb(178,148,187)">return</span> PIXEL_FORMAT_YUV422I;</span>
+<span class="line" style="height:20px">    <span class="keyword" style="color:rgb(178,148,187)">case</span> ImageFormat.<span class="string" style="color:rgb(181,189,104)">YV12:</span>      <span class="keyword" style="color:rgb(178,148,187)">return</span> PIXEL_FORMAT_YUV420P;</span>
+<span class="line" style="height:20px">    <span class="keyword" style="color:rgb(178,148,187)">case</span> ImageFormat.<span class="string" style="color:rgb(181,189,104)">RGB_565:</span>   <span class="keyword" style="color:rgb(178,148,187)">return</span> PIXEL_FORMAT_RGB565;</span>
+<span class="line" style="height:20px">    <span class="keyword" style="color:rgb(178,148,187)">case</span> ImageFormat.<span class="string" style="color:rgb(181,189,104)">JPEG:</span>      <span class="keyword" style="color:rgb(178,148,187)">return</span> PIXEL_FORMAT_JPEG;</span>
+<span class="line" style="height:20px"><span class="label">    default:</span>                    <span class="keyword" style="color:rgb(178,148,187)">return</span> <span class="literal" style="color:rgb(222,147,95)">null</span>;</span>
+<span class="line" style="height:20px">    }</span>
+<span class="line" style="height:20px">}</span>
+</pre></td></tr></tbody></table>
+
+<p>目前大部分Android手机摄像头设置的默认格式是<code>yuv420sp</code>，其原理可参考文章<a target="_blank" rel="noopener" href="http://www.cnblogs.com/azraelly/archive/2013/01/01/2841269.html">《图文详解YUV420数据格式》</a>。编码成YUV的所有像素格式里，yuv420sp占用的空间是最小的。既然如此，zxing当然会考虑到这种情况。因此针对YUV编码的数据，有<code>PlanarYUVLuminanceSource</code>这个类去处理，而针对RGB编码的数据，则使用<code>RGBLuminanceSource</code>去处理。在下节介绍的图像识别算法中我们可以知道，大部分二维码的识别都是基于二值化的方法，在色域的处理上，YUV的二值化效果要优于RGB，并且RGB图像在处理中不支持旋转。因此，一种优化的思路是讲所有ARGB编码的图像转换成YUV编码，再使用<code>PlanarYUVLuminanceSource</code>去处理生成的结果。</p>
+<table style="border-collapse:collapse; border-spacing:0px; margin:0px; width:auto; border:none; font-size:14px; table-layout:fixed"><tbody><tr style="background-color:rgb(249,249,249)"><td class="gutter" style="padding:0px; vertical-align:middle; border:none"><pre style="overflow: auto; font-family: consolas, Menlo, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, monospace; font-size: 13px; margin-top: 0px; margin-bottom: 0px; padding: 1px 20px 1px 1px; color: rgb(102, 102, 102); background-color: rgb(29, 31, 33); line-height: 1.6; border: none; text-align: right; -webkit-user-select: auto;" data-index="12" class="" name="code"><span class="line" style="height:20px">1</span>
+<span class="line" style="height:20px">2</span>
+<span class="line" style="height:20px">3</span>
+<span class="line" style="height:20px">4</span>
+<span class="line" style="height:20px">5</span>
+<span class="line" style="height:20px">6</span>
+<span class="line" style="height:20px">7</span>
+<span class="line" style="height:20px">8</span>
+<span class="line" style="height:20px">9</span>
+<span class="line" style="height:20px">10</span>
+<span class="line" style="height:20px">11</span>
+<span class="line" style="height:20px">12</span>
+<span class="line" style="height:20px">13</span>
+<span class="line" style="height:20px">14</span>
+<span class="line" style="height:20px">15</span>
+<span class="line" style="height:20px">16</span>
+<span class="line" style="height:20px">17</span>
+<span class="line" style="height:20px">18</span>
+<span class="line" style="height:20px">19</span>
+<span class="line" style="height:20px">20</span>
+<span class="line" style="height:20px">21</span>
+<span class="line" style="height:20px">22</span>
+<span class="line" style="height:20px">23</span>
+<span class="line" style="height:20px">24</span>
+<span class="line" style="height:20px">25</span>
+<span class="line" style="height:20px">26</span>
+<span class="line" style="height:20px">27</span>
+<span class="line" style="height:20px">28</span>
+<span class="line" style="height:20px">29</span>
+<span class="line" style="height:20px">30</span>
+<span class="line" style="height:20px">31</span>
+<span class="line" style="height:20px">32</span>
+<span class="line" style="height:20px">33</span>
+<span class="line" style="height:20px">34</span>
+<span class="line" style="height:20px">35</span>
+<span class="line" style="height:20px">36</span>
+<span class="line" style="height:20px">37</span>
+<span class="line" style="height:20px">38</span>
+<span class="line" style="height:20px">39</span>
+<span class="line" style="height:20px">40</span>
+<span class="line" style="height:20px">41</span>
+<span class="line" style="height:20px">42</span>
+<span class="line" style="height:20px">43</span>
+<span class="line" style="height:20px">44</span>
+<span class="line" style="height:20px">45</span>
+<span class="line" style="height:20px">46</span>
+<span class="line" style="height:20px">47</span>
+<span class="line" style="height:20px">48</span>
+<span class="line" style="height:20px">49</span>
+<span class="line" style="height:20px">50</span>
+<span class="line" style="height:20px">51</span>
+<span class="line" style="height:20px">52</span>
+<span class="line" style="height:20px">53</span>
+<span class="line" style="height:20px">54</span>
+<span class="line" style="height:20px">55</span>
+<span class="line" style="height:20px">56</span>
+</pre></td><td class="code" style="padding:0px; vertical-align:middle; border:none"><pre style="overflow: auto; font-family: consolas, Menlo, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, monospace; font-size: 13px; margin-top: 0px; margin-bottom: 0px; padding: 1px; color: rgb(197, 200, 198); background-color: rgb(29, 31, 33); line-height: 1.6; border: none; -webkit-user-select: auto;" data-index="13" class="" name="code"><span class="line" style="height:20px"><span class="comment" style="color:rgb(150,152,150)">/**</span>
+<span class="line" style="height:20px"> * RGB转YUV420sp</span>
+<span class="line" style="height:20px"> *</span>
+<span class="line" style="height:20px"> * @param yuv420sp inputWidth * inputHeight * 3 / 2</span>
+<span class="line" style="height:20px"> * @param argb inputWidth * inputHeight</span>
+<span class="line" style="height:20px"> * @param width image width</span>
+<span class="line" style="height:20px"> * @param height image height</span>
+<span class="line" style="height:20px"> */</span></span>
+<span class="line" style="height:20px"><span class="function" style="color:rgb(129,162,190)"><span class="keyword" style="color:rgb(178,148,187)">private</span> <span class="keyword" style="color:rgb(178,148,187)">static</span> <span class="keyword" style="color:rgb(178,148,187)">void</span> <span class="title" style="color:rgb(138,190,183)">encodeYUV420SP</span><span class="params" style="color:rgb(222,147,95)">(byte[] yuv420sp, <span class="keyword" style="color:rgb(178,148,187)">int</span>[] argb, <span class="keyword" style="color:rgb(178,148,187)">int</span> width, <span class="keyword" style="color:rgb(178,148,187)">int</span> height)</span> </span>{<!-- --></span>
+<span class="line" style="height:20px">    <span class="comment" style="color:rgb(150,152,150)">// 帧图片的像素大小</span></span>
+<span class="line" style="height:20px">    final <span class="keyword" style="color:rgb(178,148,187)">int</span> frameSize = width * height;</span>
+<span class="line" style="height:20px">    <span class="comment" style="color:rgb(150,152,150)">// ---YUV数据---</span></span>
+<span class="line" style="height:20px">    <span class="keyword" style="color:rgb(178,148,187)">int</span> Y, U, V;</span>
+<span class="line" style="height:20px">    <span class="comment" style="color:rgb(150,152,150)">// Y的index从0开始</span></span>
+<span class="line" style="height:20px">    <span class="keyword" style="color:rgb(178,148,187)">int</span> yIndex = <span class="number" style="color:rgb(181,189,104)">0</span>;</span>
+<span class="line" style="height:20px">    <span class="comment" style="color:rgb(150,152,150)">// UV的index从frameSize开始</span></span>
+<span class="line" style="height:20px">    <span class="keyword" style="color:rgb(178,148,187)">int</span> uvIndex = frameSize;</span>
+<span class="line" style="height:20px"></span>
+<span class="line" style="height:20px">    <span class="comment" style="color:rgb(150,152,150)">// ---颜色数据---</span></span>
+<span class="line" style="height:20px">    <span class="keyword" style="color:rgb(178,148,187)">int</span> R, G, B;</span>
+<span class="line" style="height:20px">    <span class="keyword" style="color:rgb(178,148,187)">int</span> rgbIndex = <span class="number" style="color:rgb(181,189,104)">0</span>;</span>
+<span class="line" style="height:20px"></span>
+<span class="line" style="height:20px">    <span class="comment" style="color:rgb(150,152,150)">// ---循环所有像素点，RGB转YUV---</span></span>
+<span class="line" style="height:20px">    <span class="keyword" style="color:rgb(178,148,187)">for</span> (<span class="keyword" style="color:rgb(178,148,187)">int</span> j = <span class="number" style="color:rgb(181,189,104)">0</span>; j &lt; height; j++) {<!-- --></span>
+<span class="line" style="height:20px">        <span class="keyword" style="color:rgb(178,148,187)">for</span> (<span class="keyword" style="color:rgb(178,148,187)">int</span> i = <span class="number" style="color:rgb(181,189,104)">0</span>; i &lt; width; i++) {<!-- --></span>
+<span class="line" style="height:20px"></span>
+<span class="line" style="height:20px">            R = (argb[rgbIndex] &amp; <span class="number" style="color:rgb(181,189,104)">0xff0000</span>) &gt;&gt; <span class="number" style="color:rgb(181,189,104)">16</span>;</span>
+<span class="line" style="height:20px">            G = (argb[rgbIndex] &amp; <span class="number" style="color:rgb(181,189,104)">0xff00</span>) &gt;&gt; <span class="number" style="color:rgb(181,189,104)">8</span>;</span>
+<span class="line" style="height:20px">            B = (argb[rgbIndex] &amp; <span class="number" style="color:rgb(181,189,104)">0xff</span>);</span>
+<span class="line" style="height:20px">            <span class="comment" style="color:rgb(150,152,150)">//</span></span>
+<span class="line" style="height:20px">            rgbIndex++;</span>
+<span class="line" style="height:20px"></span>
+<span class="line" style="height:20px">            <span class="comment" style="color:rgb(150,152,150)">// well known RGB to YUV algorithm</span></span>
+<span class="line" style="height:20px">            Y = ((<span class="number" style="color:rgb(181,189,104)">66</span> * R + <span class="number" style="color:rgb(181,189,104)">129</span> * G + <span class="number" style="color:rgb(181,189,104)">25</span> * B + <span class="number" style="color:rgb(181,189,104)">128</span>) &gt;&gt; <span class="number" style="color:rgb(181,189,104)">8</span>) + <span class="number" style="color:rgb(181,189,104)">16</span>;</span>
+<span class="line" style="height:20px">            U = ((-<span class="number" style="color:rgb(181,189,104)">38</span> * R - <span class="number" style="color:rgb(181,189,104)">74</span> * G + <span class="number" style="color:rgb(181,189,104)">112</span> * B + <span class="number" style="color:rgb(181,189,104)">128</span>) &gt;&gt; <span class="number" style="color:rgb(181,189,104)">8</span>) + <span class="number" style="color:rgb(181,189,104)">128</span>;</span>
+<span class="line" style="height:20px">            V = ((<span class="number" style="color:rgb(181,189,104)">112</span> * R - <span class="number" style="color:rgb(181,189,104)">94</span> * G - <span class="number" style="color:rgb(181,189,104)">18</span> * B + <span class="number" style="color:rgb(181,189,104)">128</span>) &gt;&gt; <span class="number" style="color:rgb(181,189,104)">8</span>) + <span class="number" style="color:rgb(181,189,104)">128</span>;</span>
+<span class="line" style="height:20px"></span>
+<span class="line" style="height:20px">            Y = Math.max(<span class="number" style="color:rgb(181,189,104)">0</span>, Math.min(Y, <span class="number" style="color:rgb(181,189,104)">255</span>));</span>
+<span class="line" style="height:20px">            U = Math.max(<span class="number" style="color:rgb(181,189,104)">0</span>, Math.min(U, <span class="number" style="color:rgb(181,189,104)">255</span>));</span>
+<span class="line" style="height:20px">            V = Math.max(<span class="number" style="color:rgb(181,189,104)">0</span>, Math.min(V, <span class="number" style="color:rgb(181,189,104)">255</span>));</span>
+<span class="line" style="height:20px"></span>
+<span class="line" style="height:20px">            <span class="comment" style="color:rgb(150,152,150)">// NV21 has a plane of Y and interleaved planes of VU each sampled by a factor of 2</span></span>
+<span class="line" style="height:20px">            <span class="comment" style="color:rgb(150,152,150)">// meaning for every 4 Y pixels there are 1 V and 1 U. Note the sampling is every other</span></span>
+<span class="line" style="height:20px">            <span class="comment" style="color:rgb(150,152,150)">// pixel AND every other scan line.</span></span>
+<span class="line" style="height:20px">            <span class="comment" style="color:rgb(150,152,150)">// ---Y---</span></span>
+<span class="line" style="height:20px">            yuv420sp[yIndex++] = (byte) Y;</span>
+<span class="line" style="height:20px">            <span class="comment" style="color:rgb(150,152,150)">// ---UV---</span></span>
+<span class="line" style="height:20px">            <span class="keyword" style="color:rgb(178,148,187)">if</span> ((j % <span class="number" style="color:rgb(181,189,104)">2</span> == <span class="number" style="color:rgb(181,189,104)">0</span>) &amp;&amp; (i % <span class="number" style="color:rgb(181,189,104)">2</span> == <span class="number" style="color:rgb(181,189,104)">0</span>)) {<!-- --></span>
+<span class="line" style="height:20px">                <span class="comment" style="color:rgb(150,152,150)">//</span></span>
+<span class="line" style="height:20px">                yuv420sp[uvIndex++] = (byte) V;</span>
+<span class="line" style="height:20px">                <span class="comment" style="color:rgb(150,152,150)">//</span></span>
+<span class="line" style="height:20px">                yuv420sp[uvIndex++] = (byte) U;</span>
+<span class="line" style="height:20px">            }</span>
+<span class="line" style="height:20px">        }</span>
+<span class="line" style="height:20px">    }</span>
+<span class="line" style="height:20px">}</span>
+</pre></td></tr></tbody></table>
+
+<p>Android中读取一张图片一般是通过<code>BitmapFactory.decodeFile(imgPath, options)</code>这个方法去得到这张图片的Bitmap数据，Bitmap是由ARGB值编码得到的，因此如果需要转换成YUV，还需要做一点小小的变换。</p>
+<table style="border-collapse:collapse; border-spacing:0px; margin:0px; width:auto; border:none; font-size:14px; table-layout:fixed"><tbody><tr style="background-color:rgb(249,249,249)"><td class="gutter" style="padding:0px; vertical-align:middle; border:none"><pre style="overflow: auto; font-family: consolas, Menlo, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, monospace; font-size: 13px; margin-top: 0px; margin-bottom: 0px; padding: 1px 20px 1px 1px; color: rgb(102, 102, 102); background-color: rgb(29, 31, 33); line-height: 1.6; border: none; text-align: right; -webkit-user-select: auto;" data-index="14" class="" name="code"><span class="line" style="height:20px">1</span>
+<span class="line" style="height:20px">2</span>
+<span class="line" style="height:20px">3</span>
+<span class="line" style="height:20px">4</span>
+<span class="line" style="height:20px">5</span>
+<span class="line" style="height:20px">6</span>
+<span class="line" style="height:20px">7</span>
+<span class="line" style="height:20px">8</span>
+<span class="line" style="height:20px">9</span>
+<span class="line" style="height:20px">10</span>
+<span class="line" style="height:20px">11</span>
+<span class="line" style="height:20px">12</span>
+<span class="line" style="height:20px">13</span>
+<span class="line" style="height:20px">14</span>
+<span class="line" style="height:20px">15</span>
+<span class="line" style="height:20px">16</span>
+<span class="line" style="height:20px">17</span>
+<span class="line" style="height:20px">18</span>
+<span class="line" style="height:20px">19</span>
+<span class="line" style="height:20px">20</span>
+<span class="line" style="height:20px">21</span>
+<span class="line" style="height:20px">22</span>
+<span class="line" style="height:20px">23</span>
+<span class="line" style="height:20px">24</span>
+<span class="line" style="height:20px">25</span>
+<span class="line" style="height:20px">26</span>
+<span class="line" style="height:20px">27</span>
+<span class="line" style="height:20px">28</span>
+<span class="line" style="height:20px">29</span>
+<span class="line" style="height:20px">30</span>
+<span class="line" style="height:20px">31</span>
+<span class="line" style="height:20px">32</span>
+<span class="line" style="height:20px">33</span>
+</pre></td><td class="code" style="padding:0px; vertical-align:middle; border:none"><pre style="overflow: auto; font-family: consolas, Menlo, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, monospace; font-size: 13px; margin-top: 0px; margin-bottom: 0px; padding: 1px; color: rgb(197, 200, 198); background-color: rgb(29, 31, 33); line-height: 1.6; border: none; -webkit-user-select: auto;" data-index="15" class="" name="code"><span class="line" style="height:20px"><span class="keyword" style="color:rgb(178,148,187)">private</span> <span class="keyword" style="color:rgb(178,148,187)">static</span> byte[] yuvs;</span>
+<span class="line" style="height:20px"><span class="comment" style="color:rgb(150,152,150)">/**</span>
+<span class="line" style="height:20px"> * 根据Bitmap的ARGB值生成YUV420SP数据。</span>
+<span class="line" style="height:20px"> *</span>
+<span class="line" style="height:20px"> * @param inputWidth image width</span>
+<span class="line" style="height:20px"> * @param inputHeight image height</span>
+<span class="line" style="height:20px"> * @param scaled bmp</span>
+<span class="line" style="height:20px"> * @return YUV420SP数组</span>
+<span class="line" style="height:20px"> */</span></span>
+<span class="line" style="height:20px"><span class="keyword" style="color:rgb(178,148,187)">public</span> <span class="keyword" style="color:rgb(178,148,187)">static</span> byte[] getYUV420sp(<span class="keyword" style="color:rgb(178,148,187)">int</span> inputWidth, <span class="keyword" style="color:rgb(178,148,187)">int</span> inputHeight, Bitmap scaled) {<!-- --></span>
+<span class="line" style="height:20px">    <span class="keyword" style="color:rgb(178,148,187)">int</span>[] argb = <span class="keyword" style="color:rgb(178,148,187)">new</span> <span class="keyword" style="color:rgb(178,148,187)">int</span>[inputWidth * inputHeight];</span>
+<span class="line" style="height:20px"></span>
+<span class="line" style="height:20px">    scaled.getPixels(argb, <span class="number" style="color:rgb(181,189,104)">0</span>, inputWidth, <span class="number" style="color:rgb(181,189,104)">0</span>, <span class="number" style="color:rgb(181,189,104)">0</span>, inputWidth, inputHeight);</span>
+<span class="line" style="height:20px"></span>
+<span class="line" style="height:20px">    <span class="comment" style="color:rgb(150,152,150)">/**</span>
+<span class="line" style="height:20px">     * 需要转换成偶数的像素点，否则编码YUV420的时候有可能导致分配的空间大小不够而溢出。</span>
+<span class="line" style="height:20px">     */</span></span>
+<span class="line" style="height:20px">    <span class="keyword" style="color:rgb(178,148,187)">int</span> requiredWidth = inputWidth % <span class="number" style="color:rgb(181,189,104)">2</span> == <span class="number" style="color:rgb(181,189,104)">0</span> ? inputWidth : inputWidth + <span class="number" style="color:rgb(181,189,104)">1</span>;</span>
+<span class="line" style="height:20px">    <span class="keyword" style="color:rgb(178,148,187)">int</span> requiredHeight = inputHeight % <span class="number" style="color:rgb(181,189,104)">2</span> == <span class="number" style="color:rgb(181,189,104)">0</span> ? inputHeight : inputHeight + <span class="number" style="color:rgb(181,189,104)">1</span>;</span>
+<span class="line" style="height:20px"></span>
+<span class="line" style="height:20px">    <span class="keyword" style="color:rgb(178,148,187)">int</span> byteLength = requiredWidth * requiredHeight * <span class="number" style="color:rgb(181,189,104)">3</span> / <span class="number" style="color:rgb(181,189,104)">2</span>;</span>
+<span class="line" style="height:20px">    <span class="keyword" style="color:rgb(178,148,187)">if</span> (yuvs == null || yuvs.length &lt; byteLength) {<!-- --></span>
+<span class="line" style="height:20px">        yuvs = <span class="keyword" style="color:rgb(178,148,187)">new</span> byte[byteLength];</span>
+<span class="line" style="height:20px">    } <span class="keyword" style="color:rgb(178,148,187)">else</span> {<!-- --></span>
+<span class="line" style="height:20px">        Arrays.fill(yuvs, (byte) <span class="number" style="color:rgb(181,189,104)">0</span>);</span>
+<span class="line" style="height:20px">    }</span>
+<span class="line" style="height:20px"></span>
+<span class="line" style="height:20px">    encodeYUV420SP(yuvs, argb, inputWidth, inputHeight);</span>
+<span class="line" style="height:20px"></span>
+<span class="line" style="height:20px">    scaled.recycle();</span>
+<span class="line" style="height:20px"></span>
+<span class="line" style="height:20px">    <span class="keyword" style="color:rgb(178,148,187)">return</span> yuvs;</span>
+<span class="line" style="height:20px">}</span>
+</pre></td></tr></tbody></table>
+
+<p>这里面有几个坑，在方法里已经列出来了。首先，如果每次都生成新的YUV数组，不知道在扫一扫解码时要进行GC多少次。。。所以就采用了静态的数组变量来存储数据，只有当当前的长宽乘积超过数组大小时，才重新生成新的_<code>yuvs</code>_。其次，如果鉴于YUV的特性，长宽只能是偶数个像素点，否则可能会造成数组溢出(不信可以尝试)。最后，使用完了Bitmap要记得回收，那玩意吃内存不是随便说说的。</p>
+<h2 id="二维码图像识别算法选择"><a href="#二维码图像识别算法选择" class="headerlink" title="二维码图像识别算法选择"></a>二维码图像识别算法选择</h2><p>二维码扫描精度和许多因素有关，最关键的因素是扫描算法。目前在图形识别领域中，较常用的二维码识别算法主要有两种，分别是<code>HybridBinarizer</code>和<code>GlobalHistogramBinarizer</code>，这两种算法都是基于二值化，即将图片的色域变为黑白两个颜色，然后提取图形中的二维码矩阵。实际上，zxing中的HybridBinarizer继承自GlobalHistogramBinarizer，并在此基础上做了功能性的改进。援引官方介绍：</p>
+<p><strong>This Binarizer(GlobalHistogramBinarizer) implementation uses the old ZXing global histogram approach. It is suitable for low-end mobile devices which don’t have enough CPU or memory to use a local thresholding algorithm. However, because it picks a global black point, it cannot handle difficult shadows and gradients. Faster mobile devices and all desktop applications should probably use HybridBinarizer instead.</strong></p>
+<p><strong>This class(HybridBinarizer) implements a local thresholding algorithm, which while slower than the GlobalHistogramBinarizer, is fairly efficient for what it does. It is designed for high frequency images of barcodes with black data on white backgrounds. For this application, it does a much better job than a global blackpoint with severe shadows and gradients. However it tends to produce artifacts on lower frequency images and is therefore not a good general purpose binarizer for uses outside ZXing. This class extends GlobalHistogramBinarizer, using the older histogram approach for 1D readers, and the newer local approach for 2D readers. 1D decoding using a per-row histogram is already inherently local, and only fails for horizontal gradients. We can revisit that problem later, but for now it was not a win to use local blocks for 1D.</strong> ···</p>
+<p><code>GlobalHistogramBinarizer</code>算法<strong>适合于低端的设备，对手机的CPU和内存要求不高</strong>。但它选择了全部的黑点来计算，因此无法处理阴影和渐变这两种情况。HybridBinarizer算法在执行效率上要慢于GlobalHistogramBinarizer算法，但识别相对更有效。它专门为<strong>以白色为背景的连续黑色块二维码图像</strong>解析而设计，也更适合用来解析具有<strong>严重阴影和渐变</strong>的二维码图像。</p>
+<p>网上对这两种算法的解析并不多，目前仅找到一篇文章详解了GlobalHistogramBinarizer算法，详见<a target="_blank" rel="noopener" href="http://iluhcm.com/2016/01/08/scan-qr-code-and-recognize-it-from-picture-fastly-using-zxing/[http://kuangjianwei.blog.163.com/blog/static/190088953201361015055110/]%28%29"><a href="">http://kuangjianwei.blog.163.com/blog/static/190088953201361015055110/</a></a>。有时间再看一下相关源码。</p>
+<p>zxing项目官方默认使用的是HybridBinarizer二值化方法。在实际的测试中，和官方的介绍大致一样。然而目前的大部分二维码都是黑色二维码，白色背景的。不管是二维码扫描还是二维码图像识别，使用GlobalHistogramBinarizer算法的效果要稍微比HybridBinarizer好一些，识别的速度更快，对低分辨的图像识别精度更高。</p>
+<p>除了这两种算法，我相信在图像识别领域肯定还有更好的算法存在，目前受限于知识水平，对二值化算法这一块还比较陌生，期待以后能够深入理解并改进目前的开源算法(*^__^*)……</p>
+<h2 id="图像大小对识别精度的影响"><a href="#图像大小对识别精度的影响" class="headerlink" title="图像大小对识别精度的影响"></a>图像大小对识别精度的影响</h2><p>这点是测试中无意发现的。现在的手机摄像头拍照出现的照片像素都很高，动不动就1200W像素，1600W像素，甚至是2000W都不稀奇，但照片的成像质量不一定高。将一张高分辨率的图片按原分辨率导入Android手机，很容易产生OOM。我们来计算一下，导入一张1200W像素的图片需要的内存，假设图片是<code>4000px*3000px</code>，如果导入的图片采用ARGB_8888编码形式，则每个像素需要占用4个Bytes(分别存储ARGB值)来存储，则需要<code>4000*3000*4bytes=45.776MB</code>的内存，这在有限的移动资源里，显然是不能忍受的。</p>
+<p>通过上一节对图像算法的简单研究，在<code>GlobalHistogramBinarizer</code>中，是从图像中均匀取5行（覆盖整个图像高度），每行取中间五分之四作为样本；以灰度值为X轴，每个灰度值的像素个数为Y轴建立一个直方图，从直方图中取点数最多的一个灰度值，然后再去给其他的灰度值进行分数计算，按照点数乘以与最多点数灰度值的距离的平方来进行打分，选分数最高的一个灰度值。接下来在这两个灰度值中间选取一个区分界限，取的原则是尽量靠近中间并且要点数越少越好。界限有了以后就容易了，与整幅图像的每个点进行比较，如果灰度值比界限小的就是黑，在新的矩阵中将该点置1，其余的就是白，为0。（摘自<a target="_blank" rel="noopener" href="http://kuangjianwei.blog.163.com/blog/static/190088953201361015055110/">zxing源码分析——QR码部分</a>）</p>
+<p>根据算法的实现，可以知道图像的分辨率对二维码的取值是有影响的。并不是图像的分辨率越高就越容易取到二维码。高分辨率的图像对Android的内存资源占用也很可怕。所以在测试的过程中，我尝试将图片压缩成不同大小分辨率，然后再进行图片的二维码识别。</p>
+<table style="border-collapse:collapse; border-spacing:0px; margin:0px; width:auto; border:none; font-size:14px; table-layout:fixed"><tbody><tr style="background-color:rgb(249,249,249)"><td class="gutter" style="padding:0px; vertical-align:middle; border:none"><pre style="overflow: auto; font-family: consolas, Menlo, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, monospace; font-size: 13px; margin-top: 0px; margin-bottom: 0px; padding: 1px 20px 1px 1px; color: rgb(102, 102, 102); background-color: rgb(29, 31, 33); line-height: 1.6; border: none; text-align: right; -webkit-user-select: auto;" data-index="16" class="" name="code"><span class="line" style="height:20px">1</span>
+<span class="line" style="height:20px">2</span>
+<span class="line" style="height:20px">3</span>
+<span class="line" style="height:20px">4</span>
+<span class="line" style="height:20px">5</span>
+<span class="line" style="height:20px">6</span>
+<span class="line" style="height:20px">7</span>
+<span class="line" style="height:20px">8</span>
+<span class="line" style="height:20px">9</span>
+<span class="line" style="height:20px">10</span>
+<span class="line" style="height:20px">11</span>
+<span class="line" style="height:20px">12</span>
+<span class="line" style="height:20px">13</span>
+<span class="line" style="height:20px">14</span>
+<span class="line" style="height:20px">15</span>
+<span class="line" style="height:20px">16</span>
+<span class="line" style="height:20px">17</span>
+<span class="line" style="height:20px">18</span>
+<span class="line" style="height:20px">19</span>
+<span class="line" style="height:20px">20</span>
+<span class="line" style="height:20px">21</span>
+<span class="line" style="height:20px">22</span>
+<span class="line" style="height:20px">23</span>
+<span class="line" style="height:20px">24</span>
+<span class="line" style="height:20px">25</span>
+<span class="line" style="height:20px">26</span>
+<span class="line" style="height:20px">27</span>
+<span class="line" style="height:20px">28</span>
+<span class="line" style="height:20px">29</span>
+<span class="line" style="height:20px">30</span>
+<span class="line" style="height:20px">31</span>
+<span class="line" style="height:20px">32</span>
+<span class="line" style="height:20px">33</span>
+<span class="line" style="height:20px">34</span>
+<span class="line" style="height:20px">35</span>
+<span class="line" style="height:20px">36</span>
+<span class="line" style="height:20px">37</span>
+<span class="line" style="height:20px">38</span>
+<span class="line" style="height:20px">39</span>
+<span class="line" style="height:20px">40</span>
+<span class="line" style="height:20px">41</span>
+<span class="line" style="height:20px">42</span>
+<span class="line" style="height:20px">43</span>
+<span class="line" style="height:20px">44</span>
+<span class="line" style="height:20px">45</span>
+<span class="line" style="height:20px">46</span>
+<span class="line" style="height:20px">47</span>
+<span class="line" style="height:20px">48</span>
+<span class="line" style="height:20px">49</span>
+<span class="line" style="height:20px">50</span>
+<span class="line" style="height:20px">51</span>
+</pre></td><td class="code" style="padding:0px; vertical-align:middle; border:none"><pre style="overflow: auto; font-family: consolas, Menlo, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, monospace; font-size: 13px; margin-top: 0px; margin-bottom: 0px; padding: 1px; color: rgb(197, 200, 198); background-color: rgb(29, 31, 33); line-height: 1.6; border: none; -webkit-user-select: auto;" data-index="17" class="" name="code"><span class="line" style="height:20px"><span class="comment" style="color:rgb(150,152,150)">/**</span>
+<span class="line" style="height:20px"> * 根据给定的宽度和高度动态计算图片压缩比率</span>
+<span class="line" style="height:20px"> * </span>
+<span class="line" style="height:20px"> * <span class="doctag">@param</span> options Bitmap配置文件</span>
+<span class="line" style="height:20px"> * <span class="doctag">@param</span> reqWidth 需要压缩到的宽度</span>
+<span class="line" style="height:20px"> * <span class="doctag">@param</span> reqHeight 需要压缩到的高度</span>
+<span class="line" style="height:20px"> * <span class="doctag">@return</span> 压缩比</span>
+<span class="line" style="height:20px"> */</span></span>
+<span class="line" style="height:20px"><span class="keyword" style="color:rgb(178,148,187)">public</span> <span class="keyword" style="color:rgb(178,148,187)">static</span> <span class="function" style="color:rgb(129,162,190)"><span class="keyword" style="color:rgb(178,148,187)">int</span> <span class="title" style="color:rgb(138,190,183)">calculateInSampleSize</span><span class="params" style="color:rgb(222,147,95)">(BitmapFactory.Options options, <span class="keyword" style="color:rgb(178,148,187)">int</span> reqWidth, <span class="keyword" style="color:rgb(178,148,187)">int</span> reqHeight)</span> </span>{<!-- --></span>
+<span class="line" style="height:20px">    <span class="comment" style="color:rgb(150,152,150)">// Raw height and width of image</span></span>
+<span class="line" style="height:20px">    <span class="keyword" style="color:rgb(178,148,187)">final</span> <span class="keyword" style="color:rgb(178,148,187)">int</span> height = options.outHeight;</span>
+<span class="line" style="height:20px">    <span class="keyword" style="color:rgb(178,148,187)">final</span> <span class="keyword" style="color:rgb(178,148,187)">int</span> width = options.outWidth;</span>
+<span class="line" style="height:20px">    <span class="keyword" style="color:rgb(178,148,187)">int</span> inSampleSize = <span class="number" style="color:rgb(181,189,104)">1</span>;</span>
+<span class="line" style="height:20px"></span>
+<span class="line" style="height:20px">    <span class="keyword" style="color:rgb(178,148,187)">if</span> (height &gt; reqHeight || width &gt; reqWidth) {<!-- --></span>
+<span class="line" style="height:20px"></span>
+<span class="line" style="height:20px">        <span class="keyword" style="color:rgb(178,148,187)">final</span> <span class="keyword" style="color:rgb(178,148,187)">int</span> halfHeight = height / <span class="number" style="color:rgb(181,189,104)">2</span>;</span>
+<span class="line" style="height:20px">        <span class="keyword" style="color:rgb(178,148,187)">final</span> <span class="keyword" style="color:rgb(178,148,187)">int</span> halfWidth = width / <span class="number" style="color:rgb(181,189,104)">2</span>;</span>
+<span class="line" style="height:20px"></span>
+<span class="line" style="height:20px">        <span class="comment" style="color:rgb(150,152,150)">// Calculate the largest inSampleSize value that is a power of 2 and keeps both</span></span>
+<span class="line" style="height:20px">        <span class="comment" style="color:rgb(150,152,150)">// height and width larger than the requested height and width.</span></span>
+<span class="line" style="height:20px">        <span class="keyword" style="color:rgb(178,148,187)">while</span> ((halfHeight / inSampleSize) &gt; reqHeight &amp;&amp; (halfWidth / inSampleSize) &gt; reqWidth) {<!-- --></span>
+<span class="line" style="height:20px">            inSampleSize *= <span class="number" style="color:rgb(181,189,104)">2</span>;</span>
+<span class="line" style="height:20px">        }</span>
+<span class="line" style="height:20px">    }</span>
+<span class="line" style="height:20px"></span>
+<span class="line" style="height:20px">    <span class="keyword" style="color:rgb(178,148,187)">return</span> inSampleSize;</span>
+<span class="line" style="height:20px">}</span>
+<span class="line" style="height:20px"></span>
+<span class="line" style="height:20px"><span class="comment" style="color:rgb(150,152,150)">/**</span>
+<span class="line" style="height:20px"> * 将图片根据压缩比压缩成固定宽高的Bitmap，实际解析的图片大小可能和#reqWidth、#reqHeight不一样。</span>
+<span class="line" style="height:20px"> * </span>
+<span class="line" style="height:20px"> * <span class="doctag">@param</span> imgPath 图片地址</span>
+<span class="line" style="height:20px"> * <span class="doctag">@param</span> reqWidth 需要压缩到的宽度</span>
+<span class="line" style="height:20px"> * <span class="doctag">@param</span> reqHeight 需要压缩到的高度</span>
+<span class="line" style="height:20px"> * <span class="doctag">@return</span> Bitmap</span>
+<span class="line" style="height:20px"> */</span></span>
+<span class="line" style="height:20px"><span class="keyword" style="color:rgb(178,148,187)">public</span> <span class="keyword" style="color:rgb(178,148,187)">static</span> <span class="function" style="color:rgb(129,162,190)">Bitmap <span class="title" style="color:rgb(138,190,183)">decodeSampledBitmapFromFile</span><span class="params" style="color:rgb(222,147,95)">(String imgPath, <span class="keyword" style="color:rgb(178,148,187)">int</span> reqWidth, <span class="keyword" style="color:rgb(178,148,187)">int</span> reqHeight)</span> </span>{<!-- --></span>
+<span class="line" style="height:20px"></span>
+<span class="line" style="height:20px">    <span class="comment" style="color:rgb(150,152,150)">// First decode with inJustDecodeBounds=true to check dimensions</span></span>
+<span class="line" style="height:20px">    <span class="keyword" style="color:rgb(178,148,187)">final</span> BitmapFactory.Options options = <span class="keyword" style="color:rgb(178,148,187)">new</span> BitmapFactory.Options();</span>
+<span class="line" style="height:20px">    options.inJustDecodeBounds = <span class="keyword" style="color:rgb(178,148,187)">true</span>;</span>
+<span class="line" style="height:20px">    BitmapFactory.decodeFile(imgPath, options);</span>
+<span class="line" style="height:20px"></span>
+<span class="line" style="height:20px">    <span class="comment" style="color:rgb(150,152,150)">// Calculate inSampleSize</span></span>
+<span class="line" style="height:20px">    options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);</span>
+<span class="line" style="height:20px"></span>
+<span class="line" style="height:20px">    <span class="comment" style="color:rgb(150,152,150)">// Decode bitmap with inSampleSize set</span></span>
+<span class="line" style="height:20px">    options.inJustDecodeBounds = <span class="keyword" style="color:rgb(178,148,187)">false</span>;</span>
+<span class="line" style="height:20px">    <span class="function" style="color:rgb(129,162,190)"><span class="keyword" style="color:rgb(178,148,187)">return</span> BitmapFactory.<span class="title" style="color:rgb(138,190,183)">decodeFile</span><span class="params" style="color:rgb(222,147,95)">(imgPath, options)</span></span>;</span>
+<span class="line" style="height:20px">}</span>
+</pre></td></tr></tbody></table>
+
+<p>Android图片优化需要通过在解析图片的时候，设置<code>BitmapFactory.Options.inSampleSize</code>的值，根据比例压缩图片大小。在进行图片二维码解析的线程中，通过设置不同的图片大小，来测试二维码的识别率。这个测试过程我忘记保存了，只记得测试了压缩成最大宽高值为2048、1024、512、256和128像素的包含二维码的图片，但实际的测试结果是，当<code>MAX_PICTURE_PIXEL=256</code>的时候识别率最高。</p>
+<h2 id="相机预览倍数设置及聚焦时间调整"><a href="#相机预览倍数设置及聚焦时间调整" class="headerlink" title="相机预览倍数设置及聚焦时间调整"></a>相机预览倍数设置及聚焦时间调整</h2><p>如果使用zxing默认的相机配置，会发现需要离二维码很近才能够识别出来，但这样会带来一个问题——聚焦困难。解决办法就是调整相机预览倍数以及减小相机聚焦的时间。</p>
+<p>通过测试可以发现，每个手机的最大放大倍数几乎是不一样的，这可能和摄像头的型号有关。如果设置成一个固定的值，那可能会产生在某些手机上过度放大，某些手机上放大的倍数不够。索性相机的参数设定里给我们提供了最大的放大倍数值，通过取放大倍数值的N分之一作为当前的放大倍数，就完美地解决了手机的适配问题。</p>
+<table style="border-collapse:collapse; border-spacing:0px; margin:0px; width:auto; border:none; font-size:14px; table-layout:fixed"><tbody><tr style="background-color:rgb(249,249,249)"><td class="gutter" style="padding:0px; vertical-align:middle; border:none"><pre style="overflow: auto; font-family: consolas, Menlo, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, monospace; font-size: 13px; margin-top: 0px; margin-bottom: 0px; padding: 1px 20px 1px 1px; color: rgb(102, 102, 102); background-color: rgb(29, 31, 33); line-height: 1.6; border: none; text-align: right; -webkit-user-select: auto;" data-index="18"><span class="line" style="height:20px">1</span>
+<span class="line" style="height:20px">2</span>
+<span class="line" style="height:20px">3</span>
+<span class="line" style="height:20px">4</span>
+<span class="line" style="height:20px">5</span>
+<span class="line" style="height:20px">6</span>
+</pre></td><td class="code" style="padding:0px; vertical-align:middle; border:none"><pre style="overflow: auto; font-family: consolas, Menlo, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, monospace; font-size: 13px; margin-top: 0px; margin-bottom: 0px; padding: 1px; color: rgb(197, 200, 198); background-color: rgb(29, 31, 33); line-height: 1.6; border: none; -webkit-user-select: auto;" data-index="19"><span class="line" style="height:20px">// 需要判断摄像头是否支持缩放</span>
+<span class="line" style="height:20px"><span class="section"><span class="keyword" style="color:rgb(178,148,187)">Parameters</span> <span class="keyword" style="color:rgb(178,148,187)">parameters</span> = camera.getParameters();</span></span>
+<span class="line" style="height:20px"><span class="keyword" style="color:rgb(178,148,187)">if</span> (<span class="section"><span class="keyword" style="color:rgb(178,148,187)">parameters</span>.isZoomSupported()) {<!-- --></span>
+<span class="line" style="height:20px">	// 设置成最大倍数的1/<span class="number" style="color:rgb(181,189,104)">10</span>，基本符合远近需求</span>
+<span class="line" style="height:20px">    parameters.setZoom(parameters.getMaxZoom() / 10);</span></span>
+<span class="line" style="height:20px">}</span>
+</pre></td></tr></tbody></table>
+
+<p>zxing默认的相机聚焦时间是<code>2s</code>，可以根据扫描的视觉适当调整。聚焦时间的调整也很简单，在<code>AutoFocusCallback</code>这个类里，调整<code>AUTO_FOCUS_INTERVAL_MS</code>这个值就可以了。</p>
+<h1 id="二维码扫描视觉调整"><a href="#二维码扫描视觉调整" class="headerlink" title="二维码扫描视觉调整"></a>二维码扫描视觉调整</h1><p>二维码扫描视觉的绘制在<code>ViewfinderView.java</code>完成，官方是继承了View然后在<code>onDraw()</code>方法中实现了视图的绘制。</p>
+<table style="border-collapse:collapse; border-spacing:0px; margin:0px; width:auto; border:none; font-size:14px; table-layout:fixed"><tbody><tr style="background-color:rgb(249,249,249)"><td class="gutter" style="padding:0px; vertical-align:middle; border:none"><pre style="overflow: auto; font-family: consolas, Menlo, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, monospace; font-size: 13px; margin-top: 0px; margin-bottom: 0px; padding: 1px 20px 1px 1px; color: rgb(102, 102, 102); background-color: rgb(29, 31, 33); line-height: 1.6; border: none; text-align: right; -webkit-user-select: auto;" data-index="20" class="" name="code"><span class="line" style="height:20px">1</span>
+<span class="line" style="height:20px">2</span>
+<span class="line" style="height:20px">3</span>
+<span class="line" style="height:20px">4</span>
+<span class="line" style="height:20px">5</span>
+<span class="line" style="height:20px">6</span>
+<span class="line" style="height:20px">7</span>
+<span class="line" style="height:20px">8</span>
+<span class="line" style="height:20px">9</span>
+<span class="line" style="height:20px">10</span>
+<span class="line" style="height:20px">11</span>
+<span class="line" style="height:20px">12</span>
+<span class="line" style="height:20px">13</span>
+<span class="line" style="height:20px">14</span>
+<span class="line" style="height:20px">15</span>
+<span class="line" style="height:20px">16</span>
+<span class="line" style="height:20px">17</span>
+<span class="line" style="height:20px">18</span>
+<span class="line" style="height:20px">19</span>
+<span class="line" style="height:20px">20</span>
+<span class="line" style="height:20px">21</span>
+<span class="line" style="height:20px">22</span>
+<span class="line" style="height:20px">23</span>
+<span class="line" style="height:20px">24</span>
+<span class="line" style="height:20px">25</span>
+<span class="line" style="height:20px">26</span>
+<span class="line" style="height:20px">27</span>
+<span class="line" style="height:20px">28</span>
+<span class="line" style="height:20px">29</span>
+<span class="line" style="height:20px">30</span>
+<span class="line" style="height:20px">31</span>
+<span class="line" style="height:20px">32</span>
+<span class="line" style="height:20px">33</span>
+<span class="line" style="height:20px">34</span>
+<span class="line" style="height:20px">35</span>
+<span class="line" style="height:20px">36</span>
+<span class="line" style="height:20px">37</span>
+<span class="line" style="height:20px">38</span>
+<span class="line" style="height:20px">39</span>
+<span class="line" style="height:20px">40</span>
+<span class="line" style="height:20px">41</span>
+<span class="line" style="height:20px">42</span>
+<span class="line" style="height:20px">43</span>
+<span class="line" style="height:20px">44</span>
+<span class="line" style="height:20px">45</span>
+<span class="line" style="height:20px">46</span>
+<span class="line" style="height:20px">47</span>
+<span class="line" style="height:20px">48</span>
+<span class="line" style="height:20px">49</span>
+<span class="line" style="height:20px">50</span>
+<span class="line" style="height:20px">51</span>
+<span class="line" style="height:20px">52</span>
+<span class="line" style="height:20px">53</span>
+<span class="line" style="height:20px">54</span>
+<span class="line" style="height:20px">55</span>
+<span class="line" style="height:20px">56</span>
+<span class="line" style="height:20px">57</span>
+<span class="line" style="height:20px">58</span>
+<span class="line" style="height:20px">59</span>
+<span class="line" style="height:20px">60</span>
+<span class="line" style="height:20px">61</span>
+<span class="line" style="height:20px">62</span>
+<span class="line" style="height:20px">63</span>
+<span class="line" style="height:20px">64</span>
+<span class="line" style="height:20px">65</span>
+<span class="line" style="height:20px">66</span>
+<span class="line" style="height:20px">67</span>
+<span class="line" style="height:20px">68</span>
+<span class="line" style="height:20px">69</span>
+<span class="line" style="height:20px">70</span>
+<span class="line" style="height:20px">71</span>
+<span class="line" style="height:20px">72</span>
+</pre></td><td class="code" style="padding:0px; vertical-align:middle; border:none"><pre style="overflow: auto; font-family: consolas, Menlo, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, monospace; font-size: 13px; margin-top: 0px; margin-bottom: 0px; padding: 1px; color: rgb(197, 200, 198); background-color: rgb(29, 31, 33); line-height: 1.6; border: none; -webkit-user-select: auto;" data-index="21" class="" name="code"><span class="line" style="height:20px">@Override</span>
+<span class="line" style="height:20px"><span class="keyword" style="color:rgb(178,148,187)">public</span> <span class="keyword" style="color:rgb(178,148,187)">void</span> onDraw(Canvas canvas) {<!-- --></span>
+<span class="line" style="height:20px">    <span class="keyword" style="color:rgb(178,148,187)">if</span> (cameraManager == <span class="keyword" style="color:rgb(178,148,187)">null</span>) {<!-- --></span>
+<span class="line" style="height:20px">        <span class="keyword" style="color:rgb(178,148,187)">return</span>; <span class="comment" style="color:rgb(150,152,150)">// not ready yet, early draw before done configuring</span></span>
+<span class="line" style="height:20px">    }</span>
+<span class="line" style="height:20px">    Rect frame = cameraManager.getFramingRect();</span>
+<span class="line" style="height:20px">    Rect previewFrame = cameraManager.getFramingRectInPreview();</span>
+<span class="line" style="height:20px">    <span class="keyword" style="color:rgb(178,148,187)">if</span> (frame == <span class="keyword" style="color:rgb(178,148,187)">null</span> || previewFrame == <span class="keyword" style="color:rgb(178,148,187)">null</span>) {<!-- --></span>
+<span class="line" style="height:20px">        <span class="keyword" style="color:rgb(178,148,187)">return</span>;</span>
+<span class="line" style="height:20px">    }</span>
+<span class="line" style="height:20px">    <span class="built_in" style="color:rgb(222,147,95)">int</span> <span class="variable" style="color:rgb(204,102,102)">width</span> = canvas.getWidth();</span>
+<span class="line" style="height:20px">    <span class="built_in" style="color:rgb(222,147,95)">int</span> <span class="variable" style="color:rgb(204,102,102)">height</span> = canvas.getHeight();</span>
+<span class="line" style="height:20px"></span>
+<span class="line" style="height:20px">    <span class="comment" style="color:rgb(150,152,150)">// 绘制聚焦框外的暗色透明层</span></span>
+<span class="line" style="height:20px">    paint.setColor(resultBitmap != <span class="keyword" style="color:rgb(178,148,187)">null</span> ? resultColor : maskColor);</span>
+<span class="line" style="height:20px">    canvas.drawRect(<span class="number" style="color:rgb(181,189,104)">0</span>, <span class="number" style="color:rgb(181,189,104)">0</span>, <span class="variable" style="color:rgb(204,102,102)">width</span>, frame.top, paint);</span>
+<span class="line" style="height:20px">    canvas.drawRect(<span class="number" style="color:rgb(181,189,104)">0</span>, frame.top, frame.left, frame.bottom + <span class="number" style="color:rgb(181,189,104)">1</span>, paint);</span>
+<span class="line" style="height:20px">    canvas.drawRect(frame.right + <span class="number" style="color:rgb(181,189,104)">1</span>, frame.top, <span class="variable" style="color:rgb(204,102,102)">width</span>, frame.bottom + <span class="number" style="color:rgb(181,189,104)">1</span>, paint);</span>
+<span class="line" style="height:20px">    canvas.drawRect(<span class="number" style="color:rgb(181,189,104)">0</span>, frame.bottom + <span class="number" style="color:rgb(181,189,104)">1</span>, <span class="variable" style="color:rgb(204,102,102)">width</span>, <span class="variable" style="color:rgb(204,102,102)">height</span>, paint);</span>
+<span class="line" style="height:20px"></span>
+<span class="line" style="height:20px">    <span class="keyword" style="color:rgb(178,148,187)">if</span> (resultBitmap != <span class="keyword" style="color:rgb(178,148,187)">null</span>) {<!-- --></span>
+<span class="line" style="height:20px">        <span class="comment" style="color:rgb(150,152,150)">// 如果扫描结果不为空，则把扫描的结果填充到聚焦框中</span></span>
+<span class="line" style="height:20px">        paint.setAlpha(CURRENT_POINT_OPACITY);</span>
+<span class="line" style="height:20px">        canvas.drawBitmap(resultBitmap, <span class="keyword" style="color:rgb(178,148,187)">null</span>, frame, paint);</span>
+<span class="line" style="height:20px">    } <span class="keyword" style="color:rgb(178,148,187)">else</span> {<!-- --></span>
+<span class="line" style="height:20px"></span>
+<span class="line" style="height:20px">        <span class="comment" style="color:rgb(150,152,150)">// 画一根红色的激光线表示二维码解码正在进行</span></span>
+<span class="line" style="height:20px">        paint.setColor(laserColor);</span>
+<span class="line" style="height:20px">        paint.setAlpha(SCANNER_ALPHA[scannerAlpha]);</span>
+<span class="line" style="height:20px">        scannerAlpha = (scannerAlpha + <span class="number" style="color:rgb(181,189,104)">1</span>) % SCANNER_ALPHA.length;</span>
+<span class="line" style="height:20px">        <span class="built_in" style="color:rgb(222,147,95)">int</span> middle = frame.<span class="variable" style="color:rgb(204,102,102)">height</span>() / <span class="number" style="color:rgb(181,189,104)">2</span> + frame.top;</span>
+<span class="line" style="height:20px">        canvas.drawRect(frame.left + <span class="number" style="color:rgb(181,189,104)">2</span>, middle - <span class="number" style="color:rgb(181,189,104)">1</span>, frame.right - <span class="number" style="color:rgb(181,189,104)">1</span>, middle + <span class="number" style="color:rgb(181,189,104)">2</span>, paint);</span>
+<span class="line" style="height:20px"></span>
+<span class="line" style="height:20px">        <span class="built_in" style="color:rgb(222,147,95)">float</span> scaleX = frame.<span class="variable" style="color:rgb(204,102,102)">width</span>() / (<span class="built_in" style="color:rgb(222,147,95)">float</span>) previewFrame.<span class="variable" style="color:rgb(204,102,102)">width</span>();</span>
+<span class="line" style="height:20px">        <span class="built_in" style="color:rgb(222,147,95)">float</span> scaleY = frame.<span class="variable" style="color:rgb(204,102,102)">height</span>() / (<span class="built_in" style="color:rgb(222,147,95)">float</span>) previewFrame.<span class="variable" style="color:rgb(204,102,102)">height</span>();</span>
+<span class="line" style="height:20px"></span>
+<span class="line" style="height:20px">        List&lt;ResultPoint&gt; currentPossible = possibleResultPoints;</span>
+<span class="line" style="height:20px">        List&lt;ResultPoint&gt; currentLast = lastPossibleResultPoints;</span>
+<span class="line" style="height:20px">        <span class="built_in" style="color:rgb(222,147,95)">int</span> frameLeft = frame.left;</span>
+<span class="line" style="height:20px">        <span class="built_in" style="color:rgb(222,147,95)">int</span> frameTop = frame.top;</span>
+<span class="line" style="height:20px"></span>
+<span class="line" style="height:20px">        <span class="comment" style="color:rgb(150,152,150)">// 绘制解析过程中可能扫描到的关键点，使用黄色小圆点表示</span></span>
+<span class="line" style="height:20px">        <span class="keyword" style="color:rgb(178,148,187)">if</span> (currentPossible.isEmpty()) {<!-- --></span>
+<span class="line" style="height:20px">            lastPossibleResultPoints = <span class="keyword" style="color:rgb(178,148,187)">null</span>;</span>
+<span class="line" style="height:20px">        } <span class="keyword" style="color:rgb(178,148,187)">else</span> {<!-- --></span>
+<span class="line" style="height:20px">            possibleResultPoints = <span class="keyword" style="color:rgb(178,148,187)">new</span> ArrayList&lt;&gt;(<span class="number" style="color:rgb(181,189,104)">5</span>);</span>
+<span class="line" style="height:20px">            lastPossibleResultPoints = currentPossible;</span>
+<span class="line" style="height:20px">            paint.setAlpha(CURRENT_POINT_OPACITY);</span>
+<span class="line" style="height:20px">            paint.setColor(resultPointColor);</span>
+<span class="line" style="height:20px">            <span class="keyword" style="color:rgb(178,148,187)">synchronized</span> (currentPossible) {<!-- --></span>
+<span class="line" style="height:20px">                <span class="keyword" style="color:rgb(178,148,187)">for</span> (ResultPoint <span class="built_in" style="color:rgb(222,147,95)">point</span> : currentPossible) {<!-- --></span>
+<span class="line" style="height:20px">                    canvas.drawCircle(frameLeft + (<span class="built_in" style="color:rgb(222,147,95)">int</span>) (<span class="built_in" style="color:rgb(222,147,95)">point</span>.getX() * scaleX),</span>
+<span class="line" style="height:20px">                        frameTop + (<span class="built_in" style="color:rgb(222,147,95)">int</span>) (<span class="built_in" style="color:rgb(222,147,95)">point</span>.getY() * scaleY), POINT_SIZE, paint);</span>
+<span class="line" style="height:20px">                }</span>
+<span class="line" style="height:20px">            }</span>
+<span class="line" style="height:20px">        }</span>
+<span class="line" style="height:20px">        <span class="keyword" style="color:rgb(178,148,187)">if</span> (currentLast != <span class="keyword" style="color:rgb(178,148,187)">null</span>) {<!-- --></span>
+<span class="line" style="height:20px">            paint.setAlpha(CURRENT_POINT_OPACITY / <span class="number" style="color:rgb(181,189,104)">2</span>);</span>
+<span class="line" style="height:20px">            paint.setColor(resultPointColor);</span>
+<span class="line" style="height:20px">            <span class="keyword" style="color:rgb(178,148,187)">synchronized</span> (currentLast) {<!-- --></span>
+<span class="line" style="height:20px">                <span class="built_in" style="color:rgb(222,147,95)">float</span> radius = POINT_SIZE / <span class="number" style="color:rgb(181,189,104)">2.0</span>f;</span>
+<span class="line" style="height:20px">                <span class="keyword" style="color:rgb(178,148,187)">for</span> (ResultPoint <span class="built_in" style="color:rgb(222,147,95)">point</span> : currentLast) {<!-- --></span>
+<span class="line" style="height:20px">                    canvas.drawCircle(frameLeft + (<span class="built_in" style="color:rgb(222,147,95)">int</span>) (<span class="built_in" style="color:rgb(222,147,95)">point</span>.getX() * scaleX),</span>
+<span class="line" style="height:20px">                        frameTop + (<span class="built_in" style="color:rgb(222,147,95)">int</span>) (<span class="built_in" style="color:rgb(222,147,95)">point</span>.getY() * scaleY), radius, paint);</span>
+<span class="line" style="height:20px">                }</span>
+<span class="line" style="height:20px">            }</span>
+<span class="line" style="height:20px">        }</span>
+<span class="line" style="height:20px">        <span class="comment" style="color:rgb(150,152,150)">// 重绘聚焦框里的内容，不需要重绘整个界面。</span></span>
+<span class="line" style="height:20px">        postInvalidateDelayed(ANIMATION_DELAY, frame.left - POINT_SIZE, frame.top - POINT_SIZE,</span>
+<span class="line" style="height:20px">            frame.right + POINT_SIZE, frame.bottom + POINT_SIZE);</span>
+<span class="line" style="height:20px">    }</span>
+<span class="line" style="height:20px">}</span>
+</pre></td></tr></tbody></table>
+
+<p>我给它做了一点小改变，效果差不多，代码更简洁一些。由于代码中我不是根据屏幕的宽高动态计算聚焦框的大小，因此这里省去了从CameraManager获取FramingRect和FramingRectInPreview这两个矩形的过程。我在聚焦框外加了四个角，目前大部分二维码产品基本都是这么设计的吧，当然也可以使用图片来代替。总之视觉定制是因人而异，这里不做过多介绍。</p>
+<table style="border-collapse:collapse; border-spacing:0px; margin:0px; width:auto; border:none; font-size:14px; table-layout:fixed"><tbody><tr style="background-color:rgb(249,249,249)"><td class="gutter" style="padding:0px; vertical-align:middle; border:none"><pre style="overflow: auto; font-family: consolas, Menlo, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, monospace; font-size: 13px; margin-top: 0px; margin-bottom: 0px; padding: 1px 20px 1px 1px; color: rgb(102, 102, 102); background-color: rgb(29, 31, 33); line-height: 1.6; border: none; text-align: right; -webkit-user-select: auto;" data-index="22" class="" name="code"><span class="line" style="height:20px">1</span>
+<span class="line" style="height:20px">2</span>
+<span class="line" style="height:20px">3</span>
+<span class="line" style="height:20px">4</span>
+<span class="line" style="height:20px">5</span>
+<span class="line" style="height:20px">6</span>
+<span class="line" style="height:20px">7</span>
+<span class="line" style="height:20px">8</span>
+<span class="line" style="height:20px">9</span>
+<span class="line" style="height:20px">10</span>
+<span class="line" style="height:20px">11</span>
+<span class="line" style="height:20px">12</span>
+<span class="line" style="height:20px">13</span>
+<span class="line" style="height:20px">14</span>
+<span class="line" style="height:20px">15</span>
+<span class="line" style="height:20px">16</span>
+<span class="line" style="height:20px">17</span>
+<span class="line" style="height:20px">18</span>
+<span class="line" style="height:20px">19</span>
+<span class="line" style="height:20px">20</span>
+<span class="line" style="height:20px">21</span>
+<span class="line" style="height:20px">22</span>
+<span class="line" style="height:20px">23</span>
+<span class="line" style="height:20px">24</span>
+<span class="line" style="height:20px">25</span>
+<span class="line" style="height:20px">26</span>
+<span class="line" style="height:20px">27</span>
+<span class="line" style="height:20px">28</span>
+<span class="line" style="height:20px">29</span>
+<span class="line" style="height:20px">30</span>
+<span class="line" style="height:20px">31</span>
+<span class="line" style="height:20px">32</span>
+<span class="line" style="height:20px">33</span>
+<span class="line" style="height:20px">34</span>
+<span class="line" style="height:20px">35</span>
+<span class="line" style="height:20px">36</span>
+<span class="line" style="height:20px">37</span>
+<span class="line" style="height:20px">38</span>
+<span class="line" style="height:20px">39</span>
+<span class="line" style="height:20px">40</span>
+<span class="line" style="height:20px">41</span>
+<span class="line" style="height:20px">42</span>
+<span class="line" style="height:20px">43</span>
+<span class="line" style="height:20px">44</span>
+<span class="line" style="height:20px">45</span>
+<span class="line" style="height:20px">46</span>
+<span class="line" style="height:20px">47</span>
+<span class="line" style="height:20px">48</span>
+<span class="line" style="height:20px">49</span>
+<span class="line" style="height:20px">50</span>
+<span class="line" style="height:20px">51</span>
+<span class="line" style="height:20px">52</span>
+<span class="line" style="height:20px">53</span>
+<span class="line" style="height:20px">54</span>
+<span class="line" style="height:20px">55</span>
+<span class="line" style="height:20px">56</span>
+<span class="line" style="height:20px">57</span>
+<span class="line" style="height:20px">58</span>
+<span class="line" style="height:20px">59</span>
+<span class="line" style="height:20px">60</span>
+<span class="line" style="height:20px">61</span>
+<span class="line" style="height:20px">62</span>
+<span class="line" style="height:20px">63</span>
+<span class="line" style="height:20px">64</span>
+<span class="line" style="height:20px">65</span>
+<span class="line" style="height:20px">66</span>
+<span class="line" style="height:20px">67</span>
+<span class="line" style="height:20px">68</span>
+<span class="line" style="height:20px">69</span>
+<span class="line" style="height:20px">70</span>
+<span class="line" style="height:20px">71</span>
+<span class="line" style="height:20px">72</span>
+<span class="line" style="height:20px">73</span>
+<span class="line" style="height:20px">74</span>
+<span class="line" style="height:20px">75</span>
+<span class="line" style="height:20px">76</span>
+<span class="line" style="height:20px">77</span>
+<span class="line" style="height:20px">78</span>
+<span class="line" style="height:20px">79</span>
+<span class="line" style="height:20px">80</span>
+<span class="line" style="height:20px">81</span>
+<span class="line" style="height:20px">82</span>
+<span class="line" style="height:20px">83</span>
+<span class="line" style="height:20px">84</span>
+<span class="line" style="height:20px">85</span>
+<span class="line" style="height:20px">86</span>
+<span class="line" style="height:20px">87</span>
+<span class="line" style="height:20px">88</span>
+<span class="line" style="height:20px">89</span>
+<span class="line" style="height:20px">90</span>
+<span class="line" style="height:20px">91</span>
+<span class="line" style="height:20px">92</span>
+<span class="line" style="height:20px">93</span>
+<span class="line" style="height:20px">94</span>
+<span class="line" style="height:20px">95</span>
+<span class="line" style="height:20px">96</span>
+<span class="line" style="height:20px">97</span>
+<span class="line" style="height:20px">98</span>
+<span class="line" style="height:20px">99</span>
+<span class="line" style="height:20px">100</span>
+<span class="line" style="height:20px">101</span>
+<span class="line" style="height:20px">102</span>
+</pre></td><td class="code" style="padding:0px; vertical-align:middle; border:none"><pre style="overflow: auto; font-family: consolas, Menlo, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, monospace; font-size: 13px; margin-top: 0px; margin-bottom: 0px; padding: 1px; color: rgb(197, 200, 198); background-color: rgb(29, 31, 33); line-height: 1.6; border: none; -webkit-user-select: auto;" data-index="23" class="" name="code"><span class="line" style="height:20px">@Override</span>
+<span class="line" style="height:20px"><span class="keyword" style="color:rgb(178,148,187)">public</span> <span class="keyword" style="color:rgb(178,148,187)">void</span> onDraw(Canvas canvas) {<!-- --></span>
+<span class="line" style="height:20px">    <span class="keyword" style="color:rgb(178,148,187)">if</span> (isInEditMode()) {<!-- --></span>
+<span class="line" style="height:20px">        <span class="keyword" style="color:rgb(178,148,187)">return</span>;</span>
+<span class="line" style="height:20px">    }</span>
+<span class="line" style="height:20px">    Rect frame = mFrameRect;</span>
+<span class="line" style="height:20px">    <span class="keyword" style="color:rgb(178,148,187)">if</span> (frame == <span class="keyword" style="color:rgb(178,148,187)">null</span>) {<!-- --></span>
+<span class="line" style="height:20px">        <span class="keyword" style="color:rgb(178,148,187)">return</span>;</span>
+<span class="line" style="height:20px">    }</span>
+<span class="line" style="height:20px">    <span class="built_in" style="color:rgb(222,147,95)">int</span> <span class="variable" style="color:rgb(204,102,102)">width</span> = canvas.getWidth();</span>
+<span class="line" style="height:20px">    <span class="built_in" style="color:rgb(222,147,95)">int</span> <span class="variable" style="color:rgb(204,102,102)">height</span> = canvas.getHeight();</span>
+<span class="line" style="height:20px"></span>
+<span class="line" style="height:20px">    <span class="comment" style="color:rgb(150,152,150)">// 绘制焦点框外边的暗色背景</span></span>
+<span class="line" style="height:20px">    mPaint.setColor(mMaskColor);</span>
+<span class="line" style="height:20px">    canvas.drawRect(<span class="number" style="color:rgb(181,189,104)">0</span>, <span class="number" style="color:rgb(181,189,104)">0</span>, <span class="variable" style="color:rgb(204,102,102)">width</span>, frame.top, mPaint);</span>
+<span class="line" style="height:20px">    canvas.drawRect(<span class="number" style="color:rgb(181,189,104)">0</span>, frame.top, frame.left, frame.bottom + <span class="number" style="color:rgb(181,189,104)">1</span>, mPaint);</span>
+<span class="line" style="height:20px">    canvas.drawRect(frame.right + <span class="number" style="color:rgb(181,189,104)">1</span>, frame.top, <span class="variable" style="color:rgb(204,102,102)">width</span>, frame.bottom + <span class="number" style="color:rgb(181,189,104)">1</span>, mPaint);</span>
+<span class="line" style="height:20px">    canvas.drawRect(<span class="number" style="color:rgb(181,189,104)">0</span>, frame.bottom + <span class="number" style="color:rgb(181,189,104)">1</span>, <span class="variable" style="color:rgb(204,102,102)">width</span>, <span class="variable" style="color:rgb(204,102,102)">height</span>, mPaint);</span>
+<span class="line" style="height:20px"></span>
+<span class="line" style="height:20px">    drawFocusRect(canvas, frame);</span>
+<span class="line" style="height:20px">    drawAngle(canvas, frame);</span>
+<span class="line" style="height:20px">    drawText(canvas, frame);</span>
+<span class="line" style="height:20px">    drawLaser(canvas, frame);</span>
+<span class="line" style="height:20px"></span>
+<span class="line" style="height:20px">    <span class="comment" style="color:rgb(150,152,150)">// Request another update at the animation interval, but only repaint the laser line,</span></span>
+<span class="line" style="height:20px">    <span class="comment" style="color:rgb(150,152,150)">// not the entire viewfinder mask.</span></span>
+<span class="line" style="height:20px">    postInvalidateDelayed(ANIMATION_DELAY, frame.left, frame.top, frame.right, frame.bottom);</span>
+<span class="line" style="height:20px">}</span>
+<span class="line" style="height:20px"></span>
+<span class="line" style="height:20px"><span class="comment" style="color:rgb(150,152,150)">/**</span>
+<span class="line" style="height:20px"> * 画聚焦框，白色的</span>
+<span class="line" style="height:20px"> * </span>
+<span class="line" style="height:20px"> * @param canvas</span>
+<span class="line" style="height:20px"> * @param rect</span>
+<span class="line" style="height:20px"> */</span></span>
+<span class="line" style="height:20px"><span class="keyword" style="color:rgb(178,148,187)">private</span> <span class="keyword" style="color:rgb(178,148,187)">void</span> drawFocusRect(Canvas canvas, Rect <span class="built_in" style="color:rgb(222,147,95)">rect</span>) {<!-- --></span>
+<span class="line" style="height:20px">    <span class="comment" style="color:rgb(150,152,150)">// 绘制焦点框（黑色）</span></span>
+<span class="line" style="height:20px">    mPaint.setColor(mFrameColor);</span>
+<span class="line" style="height:20px">    <span class="comment" style="color:rgb(150,152,150)">// 上</span></span>
+<span class="line" style="height:20px">    canvas.drawRect(<span class="built_in" style="color:rgb(222,147,95)">rect</span>.left + mAngleLength, <span class="built_in" style="color:rgb(222,147,95)">rect</span>.top, <span class="built_in" style="color:rgb(222,147,95)">rect</span>.right - mAngleLength, <span class="built_in" style="color:rgb(222,147,95)">rect</span>.top + mFocusThick, mPaint);</span>
+<span class="line" style="height:20px">    <span class="comment" style="color:rgb(150,152,150)">// 左</span></span>
+<span class="line" style="height:20px">    canvas.drawRect(<span class="built_in" style="color:rgb(222,147,95)">rect</span>.left, <span class="built_in" style="color:rgb(222,147,95)">rect</span>.top + mAngleLength, <span class="built_in" style="color:rgb(222,147,95)">rect</span>.left + mFocusThick, <span class="built_in" style="color:rgb(222,147,95)">rect</span>.bottom - mAngleLength,</span>
+<span class="line" style="height:20px">        mPaint);</span>
+<span class="line" style="height:20px">    <span class="comment" style="color:rgb(150,152,150)">// 右</span></span>
+<span class="line" style="height:20px">    canvas.drawRect(<span class="built_in" style="color:rgb(222,147,95)">rect</span>.right - mFocusThick, <span class="built_in" style="color:rgb(222,147,95)">rect</span>.top + mAngleLength, <span class="built_in" style="color:rgb(222,147,95)">rect</span>.right, <span class="built_in" style="color:rgb(222,147,95)">rect</span>.bottom - mAngleLength,</span>
+<span class="line" style="height:20px">        mPaint);</span>
+<span class="line" style="height:20px">    <span class="comment" style="color:rgb(150,152,150)">// 下</span></span>
+<span class="line" style="height:20px">    canvas.drawRect(<span class="built_in" style="color:rgb(222,147,95)">rect</span>.left + mAngleLength, <span class="built_in" style="color:rgb(222,147,95)">rect</span>.bottom - mFocusThick, <span class="built_in" style="color:rgb(222,147,95)">rect</span>.right - mAngleLength, <span class="built_in" style="color:rgb(222,147,95)">rect</span>.bottom,</span>
+<span class="line" style="height:20px">        mPaint);</span>
+<span class="line" style="height:20px">}</span>
+<span class="line" style="height:20px"></span>
+<span class="line" style="height:20px"><span class="comment" style="color:rgb(150,152,150)">/**</span>
+<span class="line" style="height:20px"> * 画粉色的四个角</span>
+<span class="line" style="height:20px"> * </span>
+<span class="line" style="height:20px"> * @param canvas</span>
+<span class="line" style="height:20px"> * @param rect</span>
+<span class="line" style="height:20px"> */</span></span>
+<span class="line" style="height:20px"><span class="keyword" style="color:rgb(178,148,187)">private</span> <span class="keyword" style="color:rgb(178,148,187)">void</span> drawAngle(Canvas canvas, Rect <span class="built_in" style="color:rgb(222,147,95)">rect</span>) {<!-- --></span>
+<span class="line" style="height:20px">    mPaint.setColor(mLaserColor);</span>
+<span class="line" style="height:20px">    mPaint.setAlpha(OPAQUE);</span>
+<span class="line" style="height:20px">    mPaint.setStyle(Paint.Style.FILL);</span>
+<span class="line" style="height:20px">    mPaint.setStrokeWidth(mAngleThick);</span>
+<span class="line" style="height:20px">    <span class="built_in" style="color:rgb(222,147,95)">int</span> left = <span class="built_in" style="color:rgb(222,147,95)">rect</span>.left;</span>
+<span class="line" style="height:20px">    <span class="built_in" style="color:rgb(222,147,95)">int</span> top = <span class="built_in" style="color:rgb(222,147,95)">rect</span>.top;</span>
+<span class="line" style="height:20px">    <span class="built_in" style="color:rgb(222,147,95)">int</span> right = <span class="built_in" style="color:rgb(222,147,95)">rect</span>.right;</span>
+<span class="line" style="height:20px">    <span class="built_in" style="color:rgb(222,147,95)">int</span> bottom = <span class="built_in" style="color:rgb(222,147,95)">rect</span>.bottom;</span>
+<span class="line" style="height:20px">    <span class="comment" style="color:rgb(150,152,150)">// 左上角</span></span>
+<span class="line" style="height:20px">    canvas.drawRect(left, top, left + mAngleLength, top + mAngleThick, mPaint);</span>
+<span class="line" style="height:20px">    canvas.drawRect(left, top, left + mAngleThick, top + mAngleLength, mPaint);</span>
+<span class="line" style="height:20px">    <span class="comment" style="color:rgb(150,152,150)">// 右上角</span></span>
+<span class="line" style="height:20px">    canvas.drawRect(right - mAngleLength, top, right, top + mAngleThick, mPaint);</span>
+<span class="line" style="height:20px">    canvas.drawRect(right - mAngleThick, top, right, top + mAngleLength, mPaint);</span>
+<span class="line" style="height:20px">    <span class="comment" style="color:rgb(150,152,150)">// 左下角</span></span>
+<span class="line" style="height:20px">    canvas.drawRect(left, bottom - mAngleLength, left + mAngleThick, bottom, mPaint);</span>
+<span class="line" style="height:20px">    canvas.drawRect(left, bottom - mAngleThick, left + mAngleLength, bottom, mPaint);</span>
+<span class="line" style="height:20px">    <span class="comment" style="color:rgb(150,152,150)">// 右下角</span></span>
+<span class="line" style="height:20px">    canvas.drawRect(right - mAngleLength, bottom - mAngleThick, right, bottom, mPaint);</span>
+<span class="line" style="height:20px">    canvas.drawRect(right - mAngleThick, bottom - mAngleLength, right, bottom, mPaint);</span>
+<span class="line" style="height:20px">}</span>
+<span class="line" style="height:20px"></span>
+<span class="line" style="height:20px"><span class="keyword" style="color:rgb(178,148,187)">private</span> <span class="keyword" style="color:rgb(178,148,187)">void</span> drawText(Canvas canvas, Rect <span class="built_in" style="color:rgb(222,147,95)">rect</span>) {<!-- --></span>
+<span class="line" style="height:20px">    <span class="built_in" style="color:rgb(222,147,95)">int</span> margin = <span class="number" style="color:rgb(181,189,104)">40</span>;</span>
+<span class="line" style="height:20px">    mPaint.setColor(mTextColor);</span>
+<span class="line" style="height:20px">    mPaint.setTextSize(getResources().getDimension(R.dimen.text_size_13sp));</span>
+<span class="line" style="height:20px">    <span class="keyword" style="color:rgb(178,148,187)">String</span> <span class="built_in" style="color:rgb(222,147,95)">text</span> = getResources().getString(R.string.qr_code_auto_scan_notification);</span>
+<span class="line" style="height:20px">    Paint.FontMetrics fontMetrics = mPaint.getFontMetrics();</span>
+<span class="line" style="height:20px">    <span class="built_in" style="color:rgb(222,147,95)">float</span> fontTotalHeight = fontMetrics.bottom - fontMetrics.top;</span>
+<span class="line" style="height:20px">    <span class="built_in" style="color:rgb(222,147,95)">float</span> offY = fontTotalHeight / <span class="number" style="color:rgb(181,189,104)">2</span> - fontMetrics.bottom;</span>
+<span class="line" style="height:20px">    <span class="built_in" style="color:rgb(222,147,95)">float</span> newY = <span class="built_in" style="color:rgb(222,147,95)">rect</span>.bottom + margin + offY;</span>
+<span class="line" style="height:20px">    <span class="built_in" style="color:rgb(222,147,95)">float</span> left = (ScreenUtils.getScreenWidth(mContext) - mPaint.getTextSize() * <span class="built_in" style="color:rgb(222,147,95)">text</span>.length()) / <span class="number" style="color:rgb(181,189,104)">2</span>;</span>
+<span class="line" style="height:20px">    canvas.drawText(<span class="built_in" style="color:rgb(222,147,95)">text</span>, left, newY, mPaint);</span>
+<span class="line" style="height:20px">}</span>
+<span class="line" style="height:20px"></span>
+<span class="line" style="height:20px"><span class="keyword" style="color:rgb(178,148,187)">private</span> <span class="keyword" style="color:rgb(178,148,187)">void</span> drawLaser(Canvas canvas, Rect <span class="built_in" style="color:rgb(222,147,95)">rect</span>) {<!-- --></span>
+<span class="line" style="height:20px">    <span class="comment" style="color:rgb(150,152,150)">// 绘制焦点框内固定的一条扫描线（红色）</span></span>
+<span class="line" style="height:20px">    mPaint.setColor(mLaserColor);</span>
+<span class="line" style="height:20px">    mPaint.setAlpha(SCANNER_ALPHA[mScannerAlpha]);</span>
+<span class="line" style="height:20px">    mScannerAlpha = (mScannerAlpha + <span class="number" style="color:rgb(181,189,104)">1</span>) % SCANNER_ALPHA.length;</span>
+<span class="line" style="height:20px">    <span class="built_in" style="color:rgb(222,147,95)">int</span> middle = <span class="built_in" style="color:rgb(222,147,95)">rect</span>.<span class="variable" style="color:rgb(204,102,102)">height</span>() / <span class="number" style="color:rgb(181,189,104)">2</span> + <span class="built_in" style="color:rgb(222,147,95)">rect</span>.top;</span>
+<span class="line" style="height:20px">    canvas.drawRect(<span class="built_in" style="color:rgb(222,147,95)">rect</span>.left + <span class="number" style="color:rgb(181,189,104)">2</span>, middle - <span class="number" style="color:rgb(181,189,104)">1</span>, <span class="built_in" style="color:rgb(222,147,95)">rect</span>.right - <span class="number" style="color:rgb(181,189,104)">1</span>, middle + <span class="number" style="color:rgb(181,189,104)">2</span>, mPaint);</span>
+<span class="line" style="height:20px"></span>
+<span class="line" style="height:20px">}</span>
+</pre></td></tr></tbody></table>
+## 总结
+
+<p>使用zxing进行二维码的编解码是非常方便的，zxing的API覆盖了多种主流编程语言，具有良好的扩展性和可定制性。文中进行了二维码基本功能介绍，zxing项目基本使用方法，zxing项目中目前存在的缺点及改进方案，以及自己在进行zxing项目二次开发的摸索过程中总结出的提高二维码扫描的方法。文中还有许多不足的地方，对源码的理解还不够深，特别是二维码解析关键算法（<code>GlobalHistogramBinarizer</code>和<code>HybridBinarizer</code>）。这些算法需要投入额外的时间去理解，对于目前以业务为导向的App开发来说，还存在优化的空间，期待将来有一天能像微信的二维码扫描一样快速，精确。</p>
+
+  </div>
+  
+    
+      <a id="older" class="blog-nav" href="/2022/11/06/Dandelin-spheres/">OLDER&nbsp;&gt;</a>
+      
+        
+            
+</div>
+        <div class="footer">
+  
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/shiyi-ale">KNOT 2022</a>
+        
+    </div>
+  
+    <div class="footer-more">
+      
+        KNOT--HEXO
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="back-to-top hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+      
+  <div class="search-icon" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-box">
+        <div class="search-title">
+          <!-- <span class="search-icon-input">
+            <a href="javascript: void(0)">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </span> -->
+          
+            <input type="text" class="search-input" id="search-input" placeholder="$ grep...">
+          
+          <span class="search-close-icon" id="search-close-icon">
+            <a href="javascript: void(0)">
+              <i class="iconfont icon-close"></i>
+            </a>
+          </span>
+        </div>
+        <div class="search-result" id="search-result"></div>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    // inputArea.onclick = function() {
+    //   getSearchFile()
+    //   this.onclick = null
+    // }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        inputArea.focus()
+        getSearchFile()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'><span></ul>";
+      // $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='/" + data_url + "' class='search-result-title'><h2>" + orig_data_title + "</h2></a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<h3 class=\"search-result-abstract\">" + match_content + "...</h3>"
+                }
+                str += "<hr></li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/leedom92/hexo-theme-leedom#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+    </div>
+  </body>
+</html>
