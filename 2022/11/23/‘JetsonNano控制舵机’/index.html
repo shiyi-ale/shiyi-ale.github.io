@@ -113,7 +113,7 @@
 <h3 id="简单实现"><a href="#简单实现" class="headerlink" title="简单实现"></a>简单实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> time  <span class="comment">#引入time库</span></span><br><span class="line"><span class="keyword">from</span> adafruit_servokit <span class="keyword">import</span> ServoKit  <span class="comment">#引入PCA9685库</span></span><br><span class="line"></span><br><span class="line">kit = ServoKit(channels=<span class="number">16</span>)  <span class="comment">#明确PCA9685的舵机控制数</span></span><br><span class="line">kit.servo[<span class="number">0</span>].angle = <span class="number">75</span>  <span class="comment">#channel0上的舵机旋转。</span></span><br><span class="line">time.sleep(<span class="number">1</span>)  <span class="comment">#休眠一秒</span></span><br><span class="line">kit.servo[<span class="number">0</span>].angle = <span class="number">150</span>  <span class="comment">#channel0上的舵机旋转。</span></span><br></pre></td></tr></table></figure>
 
 <p>实现效果如下：</p>
-<p><img src="/../../../Library/Application%20Support/typora-user-images/image-20221123101355008.png" alt="image-20221123101355008"></p>
+<p><video src="../video/1.mp4"></video></p>
 
   </div>
   
